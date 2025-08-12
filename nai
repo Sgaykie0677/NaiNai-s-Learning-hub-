@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Granddaughter's Learning Hub</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #fce4ec; /* Light pink background */
+            color: #4a148c; /* Dark purple text */
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #e91e63; /* Pink heading */
+            font-size: 3em;
+        }
+        h2 {
+            color: #ad1457; /* Darker pink sub-heading */
+            margin-top: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background-color: #fff8e1; /* Creamy background for content */
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .card {
+            background-color: #ffeb3b; /* Yellow card background */
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        .card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #f06292; /* Light pink button */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #d81b60; /* Darker pink on hover */
+        }
+        .alphabet button {
+            font-size: 1.5em;
+            padding: 10px 15px;
+            margin: 3px;
+        }
+        .counting-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .star {
+            font-size: 3em;
+            margin: 5px;
+            color: #ffeb3b; /* Yellow star */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Welcome to Your Learning Hub! 🏫</h1>
+        <p>A special place just for you to learn and have fun. ❤️</p>
+
+        <hr>
+
+        <div class="card">
+            <h2>🔡 Let's Learn the Alphabet!</h2>
+            <div class="alphabet">
+                <button onclick="learnLetter('A')">A</button>
+                <button onclick="learnLetter('B')">B</button>
+                <button onclick="learnLetter('C')">C</button>
+                <button onclick="learnLetter('D')">D</button>
+                <button onclick="learnLetter('E')">E</button>
+                <button onclick="learnLetter('F')">F</button>
+                <button onclick="learnLetter('G')">G</button>
+                </div>
+            <p id="letter-output" style="font-size: 2em; margin-top: 10px;">Click a letter to learn its sound!</p>
+        </div>
+
+        <hr>
+
+        <div class="card">
+            <h2>🔢 Let's Count!</h2>
+            <p id="count-output" style="font-size: 2em;">0</p>
+            <button onclick="addStar()">Add a Star</button>
+            <div class="counting-container" id="star-container"></div>
+        </div>
+
+        <hr>
+        
+        <div class="card">
+            <h2>🟣 What Shape is This?</h2>
+            <img id="shape-image" src="https://via.placeholder.com/200/9b59b6/ffffff?text=Circle" alt="Shape">
+            <p id="shape-question">Is this a square or a circle?</p>
+            <button onclick="checkShape('circle')">Circle</button>
+            <button onclick="checkShape('square')">Square</button>
+            <p id="shape-result"></p>
+        </div>
+        
+        <hr>
+
+        <div class="card">
+            <h2>🦁 Let's Learn About Animals!</h2>
+            <p id="animal-display">Click the button to see a new animal!</p>
+            <button onclick="changeAnimal()">Change Animal</button>
+            <img id="animal-image" src="https://via.placeholder.com/200" alt="Animal Image">
+        </div>
+    </div>
+
+    <script>
+        // --- Phonics ---
+        function learnLetter(letter) {
+            const letterOutput = document.getElementById('letter-output');
+            const phonicSounds = {
+                'A': 'A is for Apple!',
+                'B': 'B is for Ball!',
+                'C': 'C is for Cat!',
+                'D': 'D is for Dog!',
+                'E': 'E is for Egg!',
+                'F': 'F is for Fish!',
+                'G': 'G is for Grapes!'
+                // Add more letters and words here!
+            };
+            letterOutput.textContent = phonicSounds[letter] || `We're learning the letter ${letter}!`;
+            // Optional: You can embed a YouTube video here
+            // Example:
+            // letterOutput.innerHTML += `<iframe width="100%" height="315" src="https://www.youtube.com/embed/your_video_id" frameborder="0" allowfullscreen></iframe>`;
+        }
+        
+        // --- Counting Game ---
+        let starCount = 0;
+        function addStar() {
+            if (starCount < 10) { // Limit to 10 stars for simplicity
+                starCount++;
+                const starContainer = document.getElementById('star-container');
+                const star = document.createElement('span');
+                star.textContent = '⭐';
+                star.classList.add('star');
+                starContainer.appendChild(star);
+                document.getElementById('count-output').textContent = starCount;
+            }
+        }
+        
+        // --- Shape and Color Game ---
+        function checkShape(guess) {
+            const result = document.getElementById('shape-result');
+            if (guess === 'circle') {
+                result.textContent = "That's right, it's a circle! 👍";
+                result.style.color = 'green';
+            } else {
+                result.textContent = "Oops, try again! 🤔";
+                result.style.color = 'red';
+            }
+        }
+
+        // --- Animal Recognition ---
+        const animals = [
+            { name: "Lion", image: "https://images.unsplash.com/photo-1546700812-4293f9c6d32f?q=80&w=1000&auto=format&fit=crop" },
+            { name: "Elephant", image: "https://images.unsplash.com/photo-1563227807-f370aa0ac1b5?q=80&w=1000&auto=format&fit=crop" },
+            { name: "Giraffe", image: "https://images.unsplash.com/photo-1579737198759-4d6402432709?q=80&w=1000&auto=format&fit=crop" },
+            { name: "Zebra", image: "https://images.unsplash.com/photo-1550974163-952084c8a5ef?q=80&w=1000&auto=format&fit=crop" }
+        ];
+        let currentAnimalIndex = 0;
+        const animalDisplay = document.getElementById('animal-display');
+        const animalImage = document.getElementById('animal-image');
+        
+        function changeAnimal() {
+            currentAnimalIndex = (currentAnimalIndex + 1) % animals.length;
+            const animal = animals[currentAnimalIndex];
+            animalDisplay.textContent = `It's a ${animal.name}!`;
+            animalImage.src = animal.image;
+        }
+
+    </script>
+</body>
+</html>
