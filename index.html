@@ -3,165 +3,386 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Granddaughter's School</title>
+    <title>My Granddaughter's Learning Adventure!</title>
     <style>
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background-color: #fce4ec; /* Light pink background */
-            color: #4a148c; /* Dark purple text */
+            font-family: 'Poppins', sans-serif; /* A clear, modern font */
+            background-color: #f8f0ff; /* Soft lavender background */
+            color: #4a148c; /* Deep purple text */
             text-align: center;
             padding: 20px;
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
         h1 {
-            color: #e91e63; /* Pink heading */
-            font-size: 3em;
+            color: #ff69b4; /* Hot pink heading */
+            font-size: 3.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         h2 {
-            color: #ad1457; /* Darker pink sub-heading */
-            margin-top: 40px;
+            color: #8a2be2; /* Blue-violet sub-heading */
+            margin-top: 50px;
+            font-size: 2.5em;
         }
         .container {
-            max-width: 800px;
-            margin: auto;
-            background-color: #fff8e1; /* Creamy background for content */
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: #ffffff; /* White content background */
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border: 5px solid #ff69b4; /* Pink border */
         }
         .card {
-            background-color: #ffeb3b; /* Yellow card background */
-            margin: 20px 0;
-            padding: 15px;
-            border-radius: 10px;
-            display: inline-block;
-            width: 45%;
-            box-sizing: border-box;
-            vertical-align: top;
-            margin: 1%;
+            background-color: #fff0f5; /* Light pink card background */
+            padding: 25px;
+            border-radius: 18px;
+            margin: 25px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            border: 2px dashed #dda0dd; /* Plum dashed border */
         }
         .card img {
             max-width: 100%;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            height: auto;
+            border-radius: 12px;
+            margin-top: 15px;
+            border: 3px solid #ffb6c1; /* Light pink border for images */
         }
         button {
-            background-color: #f06292; /* Light pink button */
+            background-color: #ff8c00; /* Dark orange button */
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 1.2em;
+            padding: 12px 25px;
+            border-radius: 30px; /* More rounded buttons */
+            font-size: 1.3em;
             cursor: pointer;
-            margin: 5px;
+            margin: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.2s ease-in-out;
+            font-weight: bold;
         }
         button:hover {
-            background-color: #d81b60; /* Darker pink on hover */
+            background-color: #ff7f50; /* Coral on hover */
+            transform: translateY(-3px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+        }
+        .alphabet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+            gap: 8px;
+            margin-top: 20px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .alphabet-grid button {
+            font-size: 1.8em;
+            padding: 10px 5px;
+            background-color: #b19cd9; /* Light purple */
+        }
+        .alphabet-grid button:hover {
+            background-color: #a272e6; /* Darker purple */
+        }
+        #current-letter-display {
+            font-size: 6em; /* Very large letter */
+            font-weight: bold;
+            color: #ff69b4;
+            margin: 20px 0;
+            min-height: 100px; /* Prevent layout shifts */
+        }
+        .counting-item {
+            font-size: 4em;
+            margin: 10px;
+            display: inline-block;
+            transition: transform 0.2s ease-out;
+            animation: bounceIn 0.5s ease-out;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+        .feedback {
+            font-size: 1.8em;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        #shape-display {
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+            border-radius: 10px;
+            border: 4px solid #8a2be2;
+            background-color: #add8e6; /* Light blue */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            font-weight: bold;
+            color: #4a148c;
+            transition: all 0.3s ease-in-out;
+        }
+        .shape-circle {
+            border-radius: 50%;
+        }
+        .shape-square {
+            border-radius: 10px;
+        }
+        .animal-img-container {
+            min-height: 250px; /* Reserve space for image to prevent CLS */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Welcome to Your School! 🏫</h1>
-        <p>A special place just for you to learn and have fun. ❤️</p>
+        <h1>Welcome to Your Learning Adventure! ✨</h1>
+        <p>A super fun place just for you to play and learn amazing things! 💖</p>
 
         <hr>
 
-        <h2>🦁 Let's Learn About Animals!</h2>
-        <p id="animal-display">Click the buttons to see a new animal!</p>
-        <button onclick="changeAnimal()">Change Animal</button>
-        <img id="animal-image" src="https://via.placeholder.com/200" alt="Animal Image">
-
-        <hr>
-
-        <h2>🔡 Phonics & Letters</h2>
-        <p id="letter-display">Click a letter to hear its sound!</p>
-        <div>
-            <button onclick="playPhonic('a')">A</button>
-            <button onclick="playPhonic('b')">B</button>
-            <button onclick="playPhonic('c')">C</button>
-            <button onclick="playPhonic('d')">D</button>
+        <!-- Interactive Alphabet & Phonics Section -->
+        <div class="card">
+            <h2>🔤 Let's Learn Letters!</h2>
+            <div id="current-letter-display"></div>
+            <div class="alphabet-grid">
+                <!-- Buttons for each letter -->
+                <button onclick="displayLetter('A')">A</button>
+                <button onclick="displayLetter('B')">B</button>
+                <button onclick="displayLetter('C')">C</button>
+                <button onclick="displayLetter('D')">D</button>
+                <button onclick="displayLetter('E')">E</button>
+                <button onclick="displayLetter('F')">F</button>
+                <button onclick="displayLetter('G')">G</button>
+                <button onclick="displayLetter('H')">H</button>
+                <button onclick="displayLetter('I')">I</button>
+                <button onclick="displayLetter('J')">J</button>
+                <button onclick="displayLetter('K')">K</button>
+                <button onclick="displayLetter('L')">L</button>
+                <button onclick="displayLetter('M')">M</button>
+                <button onclick="displayLetter('N')">N</button>
+                <button onclick="displayLetter('O')">O</button>
+                <button onclick="displayLetter('P')">P</button>
+                <button onclick="displayLetter('Q')">Q</button>
+                <button onclick="displayLetter('R')">R</button>
+                <button onclick="displayLetter('S')">S</button>
+                <button onclick="displayLetter('T')">T</button>
+                <button onclick="displayLetter('U')">U</button>
+                <button onclick="displayLetter('V')">V</button>
+                <button onclick="displayLetter('W')">W</button>
+                <button onclick="displayLetter('X')">X</button>
+                <button onclick="displayLetter('Y')">Y</button>
+                <button onclick="displayLetter('Z')">Z</button>
+            </div>
+            <p id="letter-description" class="feedback">Click a letter!</p>
+            <img id="letter-image" src="" alt="" style="max-width: 200px; display: none;">
         </div>
-        <p>Phonic sound: <span id="phonic-sound"></span></p>
+
+        <hr>
+
+        <!-- Interactive Counting Game -->
+        <div class="card">
+            <h2>🔢 Let's Count Fun Things!</h2>
+            <p id="count-output" style="font-size: 3em; font-weight: bold; color: #ff8c00;">0</p>
+            <div id="counting-items" style="min-height: 100px;"></div>
+            <button onclick="addCountingItem()">Add One!</button>
+            <button onclick="resetCounting()">Start Over!</button>
+        </div>
+
+        <hr>
+        
+        <!-- Shape and Color Recognition Game -->
+        <div class="card">
+            <h2>🔵 What Shape is This?</h2>
+            <div id="shape-display"></div>
+            <p id="shape-question" style="font-size: 1.5em; margin-top: 15px;">Can you tell me what shape this is?</p>
+            <button onclick="checkShape('circle')">Circle</button>
+            <button onclick="checkShape('square')">Square</button>
+            <button onclick="checkShape('triangle')">Triangle</button>
+            <p id="shape-result" class="feedback"></p>
+            <button onclick="nextShape()">Next Shape</button>
+        </div>
         
         <hr>
 
-        <h2>➕ Simple Math Game</h2>
-        <p>What is <span id="num1">?</span> + <span id="num2">?</span> = </p>
-        <input type="text" id="math-answer" placeholder="Your Answer">
-        <button onclick="checkMathAnswer()">Check Answer</button>
-        <p id="math-result"></p>
+        <!-- Animal Recognition Section -->
+        <div class="card">
+            <h2>🦁 Guess the Animal!</h2>
+            <p id="animal-name" style="font-size: 1.8em; margin-top: 15px;">What animal is this?</p>
+            <div class="animal-img-container">
+                <img id="animal-image-display" src="" alt="Animal Image" style="max-width: 300px; display: none;">
+            </div>
+            <button onclick="showNextAnimal()">Next Animal</button>
+            <button onclick="revealAnimalName()">Tell Me!</button>
+        </div>
 
     </div>
 
     <script>
+        // --- Alphabet & Phonics ---
+        const letterData = {
+            'A': { word: 'Apple', image: 'https://placehold.co/200x200/FF0000/FFFFFF?text=A+for+Apple' },
+            'B': { word: 'Ball', image: 'https://placehold.co/200x200/0000FF/FFFFFF?text=B+for+Ball' },
+            'C': { word: 'Cat', image: 'https://placehold.co/200x200/00FF00/FFFFFF?text=C+for+Cat' },
+            'D': { word: 'Dog', image: 'https://placehold.co/200x200/FFFF00/000000?text=D+for+Dog' },
+            'E': { word: 'Elephant', image: 'https://placehold.co/200x200/800080/FFFFFF?text=E+for+Elephant' },
+            'F': { word: 'Fish', image: 'https://placehold.co/200x200/FFA500/FFFFFF?text=F+for+Fish' },
+            'G': { word: 'Grapes', image: 'https://placehold.co/200x200/800000/FFFFFF?text=G+for+Grapes' },
+            'H': { word: 'House', image: 'https://placehold.co/200x200/FFC0CB/000000?text=H+for+House' },
+            'I': { word: 'Ice Cream', image: 'https://placehold.co/200x200/A020F0/FFFFFF?text=I+for+Ice+Cream' },
+            'J': { word: 'Jellyfish', image: 'https://placehold.co/200x200/00FFFF/000000?text=J+for+Jellyfish' },
+            'K': { word: 'Kite', image: 'https://placehold.co/200x200/00BFFF/FFFFFF?text=K+for+Kite' },
+            'L': { word: 'Lion', image: 'https://placehold.co/200x200/DA70D6/FFFFFF?text=L+for+Lion' },
+            'M': { word: 'Moon', image: 'https://placehold.co/200x200/FFD700/000000?text=M+for+Moon' },
+            'N': { word: 'Nest', image: 'https://placehold.co/200x200/C0C0C0/000000?text=N+for+Nest' },
+            'O': { word: 'Orange', image: 'https://placehold.co/200x200/FF4500/FFFFFF?text=O+for+Orange' },
+            'P': { word: 'Panda', image: 'https://placehold.co/200x200/FFFACD/000000?text=P+for+Panda' },
+            'Q': { word: 'Queen', image: 'https://placehold.co/200x200/F0E68C/000000?text=Q+for+Queen' },
+            'R': { word: 'Rainbow', image: 'https://placehold.co/200x200/CD5C5C/FFFFFF?text=R+for+Rainbow' },
+            'S': { word: 'Sun', image: 'https://placehold.co/200x200/FFDAB9/000000?text=S+for+Sun' },
+            'T': { word: 'Tree', image: 'https://placehold.co/200x200/228B22/FFFFFF?text=T+for+Tree' },
+            'U': { word: 'Umbrella', image: 'https://placehold.co/200x200/6A5ACD/FFFFFF?text=U+for+Umbrella' },
+            'V': { word: 'Violin', image: 'https://placehold.co/200x200/4169E1/FFFFFF?text=V+for+Violin' },
+            'W': { word: 'Watermelon', image: 'https://placehold.co/200x200/7CFC00/000000?text=W+for+Watermelon' },
+            'X': { word: 'X-ray', image: 'https://placehold.co/200x200/87CEEB/000000?text=X+for+X-ray' },
+            'Y': { word: 'Yoyo', image: 'https://placehold.co/200x200/BA55D3/FFFFFF?text=Y+for+Yoyo' },
+            'Z': { word: 'Zebra', image: 'https://placehold.co/200x200/D2B48C/000000?text=Z+for+Zebra' }
+        };
+
+        function displayLetter(letter) {
+            const letterDisplay = document.getElementById('current-letter-display');
+            const letterDescription = document.getElementById('letter-description');
+            const letterImage = document.getElementById('letter-image');
+            
+            letterDisplay.textContent = letter;
+            const data = letterData[letter];
+            if (data) {
+                letterDescription.textContent = `${letter} is for ${data.word}!`;
+                letterImage.src = data.image;
+                letterImage.style.display = 'block';
+            } else {
+                letterDescription.textContent = `You picked the letter ${letter}!`;
+                letterImage.style.display = 'none';
+            }
+            // Optional: Add Text-to-Speech (requires browser support)
+            // if ('speechSynthesis' in window) {
+            //     const utterance = new SpeechSynthesisUtterance(letter);
+            //     speechSynthesis.speak(utterance);
+            // }
+        }
+
+        // --- Counting Game ---
+        let count = 0;
+        const countingItemsContainer = document.getElementById('counting-items');
+        const countOutput = document.getElementById('count-output');
+        const countingEmojis = ['🌟', '💖', '🌈', '🦋', '🧸']; // Fun emojis for counting
+
+        function addCountingItem() {
+            if (count < 10) { // Let's count up to 10
+                count++;
+                countOutput.textContent = count;
+                const item = document.createElement('span');
+                item.classList.add('counting-item');
+                item.textContent = countingEmojis[Math.floor(Math.random() * countingEmojis.length)];
+                countingItemsContainer.appendChild(item);
+            } else {
+                countOutput.textContent = "Great job! You counted to 10!";
+            }
+        }
+
+        function resetCounting() {
+            count = 0;
+            countOutput.textContent = 0;
+            countingItemsContainer.innerHTML = ''; // Clear all items
+        }
+
+        // --- Shape and Color Recognition ---
+        const shapes = [
+            { name: 'circle', color: '#ff69b4', text: 'Circle', class: 'shape-circle' }, // Pink circle
+            { name: 'square', color: '#8a2be2', text: 'Square', class: 'shape-square' }, // Blue-violet square
+            { name: 'triangle', color: '#ffc107', text: 'Triangle', svg: '<svg width="100%" height="100%" viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="#ffc107" stroke="#4a148c" stroke-width="5" /></svg>' } // Yellow triangle
+        ];
+        let currentShapeIndex = 0;
+        const shapeDisplay = document.getElementById('shape-display');
+        const shapeQuestion = document.getElementById('shape-question');
+        const shapeResult = document.getElementById('shape-result');
+
+        function displayShape() {
+            const currentShape = shapes[currentShapeIndex];
+            shapeDisplay.innerHTML = ''; // Clear previous shape
+            shapeDisplay.className = ''; // Reset classes
+            shapeDisplay.style.backgroundColor = currentShape.color;
+            shapeDisplay.style.borderRadius = currentShape.class === 'shape-circle' ? '50%' : '10px';
+
+            if (currentShape.svg) {
+                shapeDisplay.innerHTML = currentShape.svg;
+                shapeDisplay.style.backgroundColor = 'transparent'; // SVG handles its own fill
+            } else {
+                shapeDisplay.textContent = ''; // Only for visual shapes, not text labels
+            }
+            
+            shapeQuestion.textContent = `What shape is this?`;
+            shapeResult.textContent = '';
+        }
+
+        function checkShape(guess) {
+            const currentShape = shapes[currentShapeIndex];
+            if (guess === currentShape.name) {
+                shapeResult.textContent = "Yay! You got it right! 🎉";
+                shapeResult.style.color = 'green';
+            } else {
+                shapeResult.textContent = "Oops! Try again! 🤔";
+                shapeResult.style.color = 'red';
+            }
+        }
+
+        function nextShape() {
+            currentShapeIndex = (currentShapeIndex + 1) % shapes.length;
+            displayShape();
+        }
+
+        // Initialize first shape
+        displayShape();
+
         // --- Animal Recognition ---
         const animals = [
             { name: "Lion", image: "https://images.unsplash.com/photo-1546700812-4293f9c6d32f?q=80&w=1000&auto=format&fit=crop" },
             { name: "Elephant", image: "https://images.unsplash.com/photo-1563227807-f370aa0ac1b5?q=80&w=1000&auto=format&fit=crop" },
-            { name: "Giraffe", image: "https://images.unsplash.com/photo-1579737198759-4d6402432709?q=80&w=1000&auto=format&fit=crop" }
+            { name: "Giraffe", image: "https://images.unsplash.com/photo-1579737198759-4d6402432709?q=80&w=1000&auto=format&fit=crop" },
+            { name: "Zebra", image: "https://images.unsplash.com/photo-1550974163-952084c8a5ef?q=80&w=1000&auto=format&fit=crop" },
+            { name: "Monkey", image: "https://images.unsplash.com/photo-1540573133985-ed433d9c97e7?q=80&w=1000&auto=format&fit=crop" },
+            { name: "Penguin", image: "https://images.unsplash.com/photo-1510490795493-27e02df355b2?q=80&w=1000&auto=format&fit=crop" }
         ];
-        let currentAnimalIndex = 0;
-        const animalDisplay = document.getElementById('animal-display');
-        const animalImage = document.getElementById('animal-image');
-        
-        function changeAnimal() {
-            currentAnimalIndex = (currentAnimalIndex + 1) % animals.length;
-            const animal = animals[currentAnimalIndex];
-            animalDisplay.textContent = `It's a ${animal.name}!`;
-            animalImage.src = animal.image;
+        let currentAnimalIdx = 0;
+        const animalNameDisplay = document.getElementById('animal-name');
+        const animalImageDisplay = document.getElementById('animal-image-display');
+        let animalNameRevealed = false;
+
+        function showNextAnimal() {
+            animalNameRevealed = false; // Reset for new animal
+            currentAnimalIdx = (currentAnimalIdx + 1) % animals.length;
+            const animal = animals[currentAnimalIdx];
+            animalImageDisplay.src = animal.image;
+            animalImageDisplay.alt = animal.name; // Set alt text for accessibility
+            animalImageDisplay.style.display = 'block'; // Ensure image is visible
+            animalNameDisplay.textContent = "What animal is this?";
         }
 
-        // --- Phonics ---
-        const phonicSoundSpan = document.getElementById('phonic-sound');
-
-        function playPhonic(letter) {
-            phonicSoundSpan.textContent = `The sound for ${letter.toUpperCase()} is like in "${getPhonicExample(letter)}"`;
-            // You can add a text-to-speech or audio file here later!
-        }
-        
-        function getPhonicExample(letter) {
-            const examples = {
-                'a': 'apple',
-                'b': 'ball',
-                'c': 'cat',
-                'd': 'dog'
-            };
-            return examples[letter] || '';
-        }
-
-        // --- Simple Math Game ---
-        let correctAnswer;
-        const num1Span = document.getElementById('num1');
-        const num2Span = document.getElementById('num2');
-        const mathResultP = document.getElementById('math-result');
-
-        function generateNewProblem() {
-            const num1 = Math.floor(Math.random() * 5) + 1; // Numbers 1-5
-            const num2 = Math.floor(Math.random() * 5) + 1; // Numbers 1-5
-            num1Span.textContent = num1;
-            num2Span.textContent = num2;
-            correctAnswer = num1 + num2;
-        }
-
-        function checkMathAnswer() {
-            const userAnswer = parseInt(document.getElementById('math-answer').value, 10);
-            if (userAnswer === correctAnswer) {
-                mathResultP.textContent = "Great job, that's right! 👍";
-                mathResultP.style.color = "green";
-                setTimeout(() => {
-                    generateNewProblem();
-                    document.getElementById('math-answer').value = '';
-                    mathResultP.textContent = '';
-                }, 2000); // Wait 2 seconds before showing a new problem
-            } else {
-                mathResultP.textContent = "Oops, try again! 🤔";
-                mathResultP.style.color = "red";
+        function revealAnimalName() {
+            if (!animalNameRevealed) {
+                const animal = animals[currentAnimalIdx];
+                animalNameDisplay.textContent = `It's a ${animal.name}!`;
+                animalNameRevealed = true;
             }
         }
-        
-        // Start the math game when the page loads
-        generateNewProblem();
+
+        // Initialize first animal
+        showNextAnimal();
 
     </script>
 </body>
