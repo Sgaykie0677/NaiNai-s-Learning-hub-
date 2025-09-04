@@ -124,6 +124,12 @@
 
             const navButtons = document.getElementById('nav-buttons');
             const contentArea = document.getElementById('content-area');
+
+            const speakText = (text) => {
+                const speech = new SpeechSynthesisUtterance(text);
+                window.speechSynthesis.speak(speech);
+            };
+
             const tabs = {
                 colors: {
                     button: document.getElementById('colors-tab'),
@@ -141,9 +147,12 @@
                         const choices = getRandomUniqueColors(otherColors, 3);
                         choices.push(targetColor);
                         choices.sort(() => 0.5 - Math.random());
+                        
+                        const questionText = `Find the color: ${targetColor.name}`;
+                        speakText(questionText);
 
                         return `<div class="p-8 rounded-2xl flex flex-col items-center justify-center bg-white shadow-md">
-                                    <span class="text-4xl font-bold text-gray-800 mb-8">Find the color: ${targetColor.name}</span>
+                                    <span class="text-4xl font-bold text-gray-800 mb-8">${questionText}</span>
                                     <div id="color-choices" class="grid grid-cols-2 gap-4 w-full max-w-sm">
                                         ${choices.map(c => `
                                             <button class="w-full aspect-square rounded-2xl shadow-lg border-4 border-white transition-all duration-100 hover:scale-105"
@@ -159,10 +168,11 @@
                         document.querySelectorAll('#color-choices button').forEach(button => {
                             button.addEventListener('click', (e) => {
                                 const feedbackEl = document.getElementById('feedback-message');
-                                if (e.target.dataset.color-name === tabs.colors.data[tabs.colors.index].name) {
+                                if (e.target.dataset.colorName === tabs.colors.data[tabs.colors.index].name) {
                                     feedbackEl.textContent = "Correct!";
                                     feedbackEl.classList.remove('text-red-500');
                                     feedbackEl.classList.add('text-green-500');
+                                    speakText('Correct!');
                                     setTimeout(() => {
                                         tabs.colors.index = (tabs.colors.index + 1) % tabs.colors.data.length;
                                         renderContent();
@@ -171,6 +181,7 @@
                                     feedbackEl.textContent = "Try again!";
                                     feedbackEl.classList.remove('text-green-500');
                                     feedbackEl.classList.add('text-red-500');
+                                    speakText('Try again!');
                                 }
                             });
                         });
@@ -182,12 +193,29 @@
                     data: Array.from({ length: 20 }, (_, i) => i + 1),
                     render: (number) => {
                         const stars = Array.from({ length: number }, (_, i) => `<span class="text-yellow-400 text-5xl">★</span>`).join('');
+                        
+                        const questionText = `This is the number ${number}.`;
+                        
                         return `<div class="p-8 rounded-2xl flex flex-col items-center justify-center bg-white shadow-md">
                                     <div class="flex flex-wrap justify-center mb-4">${stars}</div>
-                                    <span class="text-6xl font-bold text-gray-800">${number}</span>
+                                    <div class="flex items-center space-x-4">
+                                        <button id="speaker-button" class="bg-indigo-500 hover:bg-indigo-600 text-white p-3 rounded-full shadow-lg transition-colors duration-200">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.47-9.544a8 8 0 010 12.112M11 5l-4 4H3a2 2 0 00-2 2v2a2 2 0 002 2h4l4 4V5z" />
+                                            </svg>
+                                        </button>
+                                        <span class="text-6xl font-bold text-gray-800">${number}</span>
+                                    </div>
                                 </div>`;
                     },
-                    init: () => navButtons.classList.remove('hidden')
+                    init: () => {
+                        navButtons.classList.remove('hidden');
+                        const questionText = `Let's count! This is the number ${tabs.counting.data[tabs.counting.index]}.`;
+                        speakText(questionText);
+                        document.getElementById('speaker-button').addEventListener('click', () => {
+                            speakText(`This is the number ${tabs.counting.data[tabs.counting.index]}.`);
+                        });
+                    }
                 },
                 shapes: {
                     button: document.getElementById('shapes-tab'),
@@ -206,8 +234,11 @@
                         choices.push(targetShape);
                         choices.sort(() => 0.5 - Math.random());
 
+                        const questionText = `Find the shape: ${targetShape.name}`;
+                        speakText(questionText);
+
                         return `<div class="p-8 rounded-2xl flex flex-col items-center justify-center bg-white shadow-md">
-                                    <span class="text-4xl font-bold text-gray-800 mb-8">Find the shape: ${targetShape.name}</span>
+                                    <span class="text-4xl font-bold text-gray-800 mb-8">${questionText}</span>
                                     <div id="shape-choices" class="grid grid-cols-2 gap-4 w-full max-w-sm">
                                         ${choices.map(s => `
                                             <button class="w-full aspect-square rounded-2xl shadow-lg border-4 border-white transition-all duration-100 hover:scale-105 flex items-center justify-center"
@@ -228,6 +259,7 @@
                                     feedbackEl.textContent = "Correct!";
                                     feedbackEl.classList.remove('text-red-500');
                                     feedbackEl.classList.add('text-green-500');
+                                    speakText('Correct!');
                                     setTimeout(() => {
                                         tabs.shapes.index = (tabs.shapes.index + 1) % tabs.shapes.data.length;
                                         renderContent();
@@ -236,6 +268,7 @@
                                     feedbackEl.textContent = "Try again!";
                                     feedbackEl.classList.remove('text-green-500');
                                     feedbackEl.classList.add('text-red-500');
+                                    speakText('Try again!');
                                 }
                             });
                         });
@@ -257,6 +290,9 @@
                         const choices = getRandomUniqueItems(otherLetters, 3);
                         choices.push(targetLetter);
                         choices.sort(() => 0.5 - Math.random());
+
+                        const questionText = `Find the picture that starts with the letter: ${targetLetter.letter}`;
+                        speakText(questionText);
 
                         return `<div class="p-8 rounded-2xl flex flex-col items-center justify-center bg-white shadow-md">
                                     <span class="text-6xl font-bold text-gray-800 mb-8">${targetLetter.letter}</span>
@@ -282,6 +318,7 @@
                                     feedbackEl.textContent = "Correct!";
                                     feedbackEl.classList.remove('text-red-500');
                                     feedbackEl.classList.add('text-green-500');
+                                    speakText('Correct!');
                                     setTimeout(() => {
                                         tabs.letters.index = (tabs.letters.index + 1) % tabs.letters.data.length;
                                         renderContent();
@@ -290,6 +327,7 @@
                                     feedbackEl.textContent = "Try again!";
                                     feedbackEl.classList.remove('text-green-500');
                                     feedbackEl.classList.add('text-red-500');
+                                    speakText('Try again!');
                                 }
                             });
                         });
@@ -328,10 +366,10 @@
 
             function renderContent() {
                 // Check if the current tab has a specific render function or uses the default one
-                if (currentTab.render.length > 0) { // Sequential tabs like Counting and Animals need data passed
+                if (currentTab === tabs.counting || currentTab === tabs.animals) {
                     const currentItem = currentTab.data[currentTab.index];
                     contentArea.innerHTML = currentTab.render(currentItem);
-                } else { // Challenge tabs like Colors, Shapes, and Letters handle data internally
+                } else {
                     contentArea.innerHTML = currentTab.render();
                 }
                 currentTab.init();
