@@ -110,7 +110,7 @@
             background: none;
             font-size: clamp(2em, 6vw, 3em);
             animation: bounceIn 0.5s ease-out;
-            cursor: default;
+            cursor: pointer; /* Now they are clickable */
         }
         @keyframes bounceIn {
             0% { transform: scale(0); opacity: 0; }
@@ -167,29 +167,42 @@
             border-radius: 15px;
             border: 3px solid #ffb6c1;
         }
-        .alphabet-content {
+        .alphabet-content, .phonics-content {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .alphabet-content .letter-display {
+        .alphabet-content .letter-display, .phonics-content .letter-display {
             font-size: clamp(8em, 18vw, 12em);
             font-weight: bold;
             color: #8a2be2;
             text-shadow: 3px 3px 6px rgba(0,0,0,0.1);
         }
-        .alphabet-content .word-display {
+        .alphabet-content .word-display, .phonics-content .word-display {
             font-size: clamp(2em, 5vw, 3em);
             color: #ff69b4;
             margin-top: -20px;
             text-transform: capitalize;
         }
-        .alphabet-content .word-image {
+        .alphabet-content .word-image, .phonics-content .word-image {
             max-width: 100%;
             height: clamp(150px, 40vw, 250px);
             border-radius: 15px;
             border: 3px solid #ffb6c1;
             margin-top: 15px;
+        }
+        /* New style for the start button section */
+        #start-section {
+            background-color: #fff0f5;
+            padding: 30px;
+            border-radius: 25px;
+            border: 3px solid #ff8c00;
+            margin-top: 50px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
@@ -199,9 +212,15 @@
         <h1>Hello, Little One! 💖</h1>
         <p>Let's have a super fun time playing and learning new things!</p>
 
+        <!-- New Start Section -->
+        <div id="start-section">
+            <button id="start-button" onclick="startApp()">Start Learning! ✨</button>
+            <p>Tap here to begin the fun!</p>
+        </div>
+
         <hr>
 
-        <!-- Interactive Counting Game -->
+        <!-- Hands-on Counting Game -->
         <div class="card">
             <h2>🔢 Let's Count!</h2>
             <p style="font-size: 3em; font-weight: bold; color: #ff8c00;">
@@ -255,6 +274,20 @@
         </div>
 
         <hr>
+
+        <!-- Phonics Section -->
+        <div class="card">
+            <h2>🗣️ Let's Learn the Sounds!</h2>
+            <div class="phonics-content">
+                <span class="letter-display" id="phonics-letter">A</span>
+                <span class="word-display" id="phonics-word">Apple</span>
+                <img class="word-image" id="phonics-image" src="https://placehold.co/250x250/fff/333?text=Apple" alt="Apple">
+            </div>
+            <button onclick="nextPhonicsLetter()">Next Sound ➡️</button>
+            <button onclick="speakPhonics()">Hear the sound 🔊</button>
+        </div>
+        
+        <hr>
         
         <!-- Simple Shape Matching -->
         <div class="card">
@@ -296,19 +329,40 @@
             }
         }
 
+        // --- All Initializations moved to one function ---
+        function startApp() {
+            // Hide the start section
+            document.getElementById('start-section').style.display = 'none';
+
+            // Now, run all the initial voice prompts
+            speakText("Hello, and welcome to your new learning adventure!");
+            
+            initializeCounting();
+            initializeColors();
+            initializeAnimals();
+            initializeAlphabet();
+            initializePhonics();
+            initializeShapes();
+            initializeDrawing();
+        }
+
         // --- Simple Counting Game (1-5) ---
         let count = 0;
         const countingItemsContainer = document.getElementById('counting-items');
         const countOutput = document.getElementById('count-output');
-        const countingEmojis = ['⭐', '🎈', '🍭', '🍓', '🚗'];
+
+        function initializeCounting() {
+            resetCounting();
+            speakText("Let's count! Tap the button to add a star!");
+        }
 
         function addCountingItem() {
-            if (count < 5) { // Let's count up to 5 for toddlers
+            if (count < 5) {
                 count++;
                 countOutput.textContent = count;
                 const item = document.createElement('span');
                 item.classList.add('counting-item');
-                item.textContent = countingEmojis[count - 1]; // Use a unique emoji for each number
+                item.textContent = '⭐';
                 countingItemsContainer.appendChild(item);
                 speakText(count.toString());
             } else {
@@ -334,6 +388,11 @@
             'yellow': { name: 'Yellow', emoji: '☀️' }
         };
 
+        function initializeColors() {
+            changeColor('red'); // Set a default color
+            speakText("What color is this?");
+        }
+
         function changeColor(color) {
             const data = colorData[color];
             colorDisplay.style.backgroundColor = color;
@@ -353,6 +412,11 @@
         const animalImageDisplay = document.getElementById('animal-image-display');
         const animalFeedback = document.getElementById('animal-feedback');
 
+        function initializeAnimals() {
+            nextAnimal();
+            speakText("Let's learn about animals! Who am I?");
+        }
+
         function nextAnimal() {
             currentAnimalIdx = (currentAnimalIdx + 1) % animals.length;
             const animal = animals[currentAnimalIdx];
@@ -367,7 +431,7 @@
             animalFeedback.textContent = `A ${animal.name} says ${animal.sound}!`;
             speakText(`A ${animal.name} says ${animal.sound}!`);
         }
-        nextAnimal();
+        
 
         // --- Alphabet Learning ---
         const alphabet = [
@@ -385,6 +449,11 @@
         const alphabetWord = document.getElementById('alphabet-word');
         const alphabetImage = document.getElementById('alphabet-image');
 
+        function initializeAlphabet() {
+            updateAlphabetContent();
+            speakText("Let's learn the alphabet!");
+        }
+
         function updateAlphabetContent() {
             const item = alphabet[currentAlphabetIdx];
             alphabetLetter.textContent = item.letter;
@@ -401,10 +470,47 @@
 
         function speakAlphabet() {
             const item = alphabet[currentAlphabetIdx];
-            speakText(`${item.letter} is for ${item.word}`);
+            speakText(`The letter is ${item.letter}, and the word is ${item.word}.`);
         }
-        updateAlphabetContent(); // Initialize the alphabet section on load
+        
 
+        // --- Phonics Section ---
+        const phonics = [
+            { letter: 'A', sound: 'Ah', word: 'Apple', image: 'https://placehold.co/250x250/fff/333?text=Apple' },
+            { letter: 'B', sound: 'Buh', word: 'Ball', image: 'https://placehold.co/250x250/fff/333?text=Ball' },
+            { letter: 'C', sound: 'Cuh', word: 'Cat', image: 'https://placehold.co/250x250/fff/333?text=Cat' },
+            { letter: 'D', sound: 'Duh', word: 'Duck', image: 'https://placehold.co/250x250/fff/333?text=Duck' },
+            { letter: 'E', sound: 'Eh', word: 'Egg', image: 'https://placehold.co/250x250/fff/333?text=Egg' },
+        ];
+        let currentPhonicsIdx = 0;
+        const phonicsLetter = document.getElementById('phonics-letter');
+        const phonicsWord = document.getElementById('phonics-word');
+        const phonicsImage = document.getElementById('phonics-image');
+
+        function initializePhonics() {
+            updatePhonicsContent();
+            speakText("Let's learn the sounds!");
+        }
+
+        function updatePhonicsContent() {
+            const item = phonics[currentPhonicsIdx];
+            phonicsLetter.textContent = item.letter;
+            phonicsWord.textContent = item.word;
+            phonicsImage.src = item.image;
+            phonicsImage.alt = item.word;
+        }
+
+        function nextPhonicsLetter() {
+            currentPhonicsIdx = (currentPhonicsIdx + 1) % phonics.length;
+            updatePhonicsContent();
+            speakPhonics();
+        }
+
+        function speakPhonics() {
+            const item = phonics[currentPhonicsIdx];
+            speakText(`The sound is ${item.sound}, as in ${item.word}.`);
+        }
+        
         // --- Simple Shape Matching ---
         const shapes = [
             { name: 'circle', text: '🔵', shape: '50%' },
@@ -415,6 +521,11 @@
         const shapeTarget = document.getElementById('shape-target');
         const shapeOptionsContainer = document.querySelector('.shape-option-container');
         const shapeFeedback = document.getElementById('shape-feedback');
+
+        function initializeShapes() {
+            generateShapeProblem();
+            speakText("Match the shape! Find the shape that looks the same.");
+        }
 
         function generateShapeProblem() {
             const availableShapes = [...shapes];
@@ -460,7 +571,7 @@
                 speakText("Oops! Try again!");
             }
         }
-        generateShapeProblem();
+        
 
         // --- Simple Drawing Pad ---
         const canvas = document.getElementById('drawing-canvas');
@@ -471,8 +582,12 @@
         let currentColor = 'red';
         const colorButtons = document.querySelectorAll('.drawing-palette button');
 
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        function initializeDrawing() {
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            selectColor('red'); // Set default color
+            speakText("Let's draw! Pick a color and draw something fun.");
+        }
 
         function draw(e) {
             if (!isDrawing) return;
@@ -506,7 +621,11 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             speakText("Canvas cleared!");
         }
-        selectColor('red'); // Set default color
+
+        // Initialize all sections on page load
+        window.onload = function() {
+            // The start button will now trigger all initializations
+        };
 
     </script>
 </body>
