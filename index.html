@@ -3,709 +3,380 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toddler's First Learning App</title>
-    <!-- Poppins Font for a playful look -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <title>Learning App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8eafc; /* Light pastel purple */
-            color: #5c189b; /* Deep purple */
-            text-align: center;
-            padding: 20px;
-            overflow-x: hidden;
-            line-height: 1.6;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        h1 {
-            color: #ff69b4; /* Bright pink */
-            font-size: clamp(2.5em, 8vw, 4em); /* Responsive font size */
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-        h2 {
-            color: #8a2be2; /* Blue-violet */
-            margin-top: clamp(20px, 5vw, 40px);
-            font-size: clamp(1.8em, 6vw, 2.5em);
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            transition: background-color 0.3s ease;
         }
         .container {
-            width: 100%;
-            max-width: 700px;
-            margin: 20px auto;
-            background-color: #ffffff;
-            padding: clamp(20px, 5vw, 30px);
-            border-radius: 25px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            border: 5px solid #ffb6c1; /* Soft pink border */
-        }
-        .card {
-            background-color: #fff0f5; /* Light pink card */
-            padding: clamp(15px, 4vw, 25px);
-            border-radius: 18px;
-            margin: clamp(15px, 4vw, 25px) 0;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            border: 2px dashed #dda0dd; /* Plum dashed border */
-        }
-        button {
-            background-color: #ff8c00; /* Dark orange */
-            color: white;
-            border: none;
-            padding: clamp(10px, 3vw, 12px) clamp(20px, 6vw, 25px);
-            border-radius: 30px;
-            font-size: clamp(1.1em, 4vw, 1.3em);
-            cursor: pointer;
-            margin: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: all 0.2s ease-in-out;
-            font-weight: bold;
-        }
-        button:hover {
-            background-color: #ff7f50; /* Coral on hover */
-            transform: translateY(-3px);
-            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
-        }
-        .feedback {
-            font-size: clamp(1.2em, 4vw, 1.8em);
-            margin-top: 20px;
-            font-weight: bold;
-            min-height: 40px; /* Prevent layout shift */
-        }
-        #color-display, #shape-target, .shape-option, .counting-item {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: clamp(120px, 30vw, 200px);
-            height: clamp(120px, 30vw, 200px);
-            margin: 20px auto;
-            border-radius: 50%; /* Circle by default */
-            border: 4px solid #8a2be2;
-            transition: all 0.3s ease-in-out;
-            font-size: clamp(3em, 8vw, 6em);
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        #color-display {
-            background-color: #ccc;
-        }
-        .color-palette button {
-            width: clamp(40px, 10vw, 60px);
-            height: clamp(40px, 10vw, 60px);
-            border-radius: 50%;
-            padding: 0;
-        }
-        #counting-items {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 1rem;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            min-height: 100px;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        .counting-item {
-            width: clamp(50px, 12vw, 80px);
-            height: clamp(50px, 12vw, 80px);
-            border: none;
-            background: none;
-            font-size: clamp(2em, 6vw, 3em);
-            animation: bounceIn 0.5s ease-out;
-            cursor: pointer; /* Now they are clickable */
+        .tab-button.active {
+            background-color: #d1d5db;
+            color: #1f2937;
         }
-        @keyframes bounceIn {
-            0% { transform: scale(0); opacity: 0; }
-            80% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); }
-        }
-        .shape-option-container {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-        .shape-option {
-            background-color: #b19cd9;
-            border-radius: 10px;
-        }
-        .shape-option:hover {
-            transform: scale(1.05);
-        }
-        .shape-option.correct { background-color: #90ee90; }
-        .shape-option.incorrect { background-color: #ffb6c1; }
-
-        /* Drawing canvas styles */
-        #drawing-canvas {
-            border: 2px solid #8a2be2;
-            background-color: #fff;
-            cursor: crosshair;
-            touch-action: none;
-            border-radius: 15px;
-        }
-        .drawing-palette button {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            padding: 0;
-            margin: 5px;
-            border: 2px solid #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .drawing-palette button.selected {
-            border-color: #ff8c00;
-            transform: scale(1.2);
-        }
-        .animal-img-container {
-            min-height: 200px;
+        .tab-content {
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            text-align: center;
         }
-        #animal-image-display {
-            max-width: 100%;
-            max-height: 250px;
-            border-radius: 15px;
-            border: 3px solid #ffb6c1;
-        }
-        .alphabet-content, .phonics-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .alphabet-content .letter-display, .phonics-content .letter-display {
-            font-size: clamp(8em, 18vw, 12em);
-            font-weight: bold;
-            color: #8a2be2;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.1);
-        }
-        .alphabet-content .word-display, .phonics-content .word-display {
-            font-size: clamp(2em, 5vw, 3em);
-            color: #ff69b4;
-            margin-top: -20px;
-            text-transform: capitalize;
-        }
-        .alphabet-content .word-image, .phonics-content .word-image {
-            max-width: 100%;
-            height: clamp(150px, 40vw, 250px);
-            border-radius: 15px;
-            border: 3px solid #ffb6c1;
-            margin-top: 15px;
-        }
-        /* New style for the start button section */
-        #start-section {
-            background-color: #fff0f5;
-            padding: 30px;
-            border-radius: 25px;
-            border: 3px solid #ff8c00;
-            margin-top: 50px;
-            animation: fadeIn 1s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .choice-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .choice-buttons button {
-            padding: 10px 20px;
-            font-size: 1.5em;
-            width: clamp(50px, 12vw, 80px);
-            height: clamp(50px, 12vw, 80px);
-        }
-        .choice-buttons button.correct { background-color: #90ee90; }
-        .choice-buttons button.incorrect { background-color: #ffb6c1; }
     </style>
 </head>
-<body>
-
-    <div class="container">
-        <h1>Hello, Little One! 💖</h1>
-        <p>Let's have a super fun time playing and learning new things!</p>
-
-        <!-- New Start Section -->
-        <div id="start-section">
-            <button id="start-button" onclick="startApp()">Start Learning! ✨</button>
-            <p>Tap here to begin the fun!</p>
+<body class="bg-gray-100 p-4">
+    <div class="container bg-white rounded-3xl shadow-xl overflow-hidden mt-4 mb-4">
+        <!-- Tab Navigation -->
+        <div class="flex p-2 bg-gray-200 rounded-full mt-4 mx-4">
+            <button id="colors-tab" class="tab-button flex-1 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200">Colors</button>
+            <button id="counting-tab" class="tab-button flex-1 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200">Counting</button>
+            <button id="shapes-tab" class="tab-button flex-1 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200">Shapes</button>
+            <button id="letters-tab" class="tab-button flex-1 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200">Letters</button>
+            <button id="animals-tab" class="tab-button flex-1 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200 active">Animals</button>
         </div>
 
-        <hr>
-
-        <!-- Hands-on Counting Game -->
-        <div class="card" id="counting-card" style="display:none;">
-            <h2>🔢 Let's Count!</h2>
-            <p style="font-size: 3em; font-weight: bold; color: #ff8c00;">
-                <span id="count-output">0</span>
-            </p>
-            <div id="counting-items"></div>
-            <button onclick="addCountingItem()">Add One! ✨</button>
-            <button onclick="resetCounting()">Start Over! 🔄</button>
-            <button onclick="showNextSection('counting-card')">Done Counting! ✅</button>
+        <!-- Main Content Area -->
+        <div id="content-area" class="tab-content">
+            <!-- Content will be dynamically inserted here -->
         </div>
 
-        <hr>
-
-        <!-- Color Recognition -->
-        <div class="card" id="color-card" style="display:none;">
-            <h2>🎨 Find a Color!</h2>
-            <div id="color-question" class="feedback"></div>
-            <div id="color-target-img-container" style="display: none;">
-                <img id="color-target-img" src="" style="max-width: 150px; border-radius: 10px;" alt="">
-            </div>
-            <div id="color-options" class="choice-buttons"></div>
-            <p id="color-feedback" class="feedback"></p>
-            <button onclick="nextColorProblem()">Next Color ➡️</button>
-            <button onclick="showNextSection('color-card')">Done with Colors! ✅</button>
-        </div>
-
-        <hr>
-
-        <!-- Animal Sounds -->
-        <div class="card" id="animal-card" style="display:none;">
-            <h2>🦁 Who Am I?</h2>
-            <div class="animal-img-container">
-                <img id="animal-image-display" src="" alt="Animal">
-            </div>
-            <div id="animal-options" class="choice-buttons"></div>
-            <p id="animal-feedback" class="feedback"></p>
-            <button onclick="nextAnimalProblem()">Next Animal ➡️</button>
-            <button onclick="showNextSection('animal-card')">Done with Animals! ✅</button>
-        </div>
-
-        <hr>
-
-        <!-- Let's Learn the Alphabet -->
-        <div class="card" id="alphabet-card" style="display:none;">
-            <h2>🔤 Find the Letter!</h2>
-            <div class="alphabet-content">
-                <div id="alphabet-target"></div>
-                <div id="alphabet-word-container">
-                    <span class="word-display" id="alphabet-word"></span>
-                    <img class="word-image" id="alphabet-image" src="" alt="">
-                </div>
-            </div>
-            <div id="alphabet-options" class="choice-buttons"></div>
-            <p id="alphabet-feedback" class="feedback"></p>
-            <button onclick="nextAlphabetProblem()">Next Letter ➡️</button>
-            <button onclick="showNextSection('alphabet-card')">Done with Alphabet! ✅</button>
-        </div>
-
-        <hr>
-
-        <!-- Phonics Section -->
-        <div class="card" id="phonics-card" style="display:none;">
-            <h2>🗣️ Let's Learn the Sounds!</h2>
-            <div class="phonics-content">
-                <span class="letter-display" id="phonics-letter"></span>
-                <span class="word-display" id="phonics-word"></span>
-                <img class="word-image" id="phonics-image" src="" alt="">
-            </div>
-            <button onclick="nextPhonicsProblem()">Next Sound ➡️</button>
-            <button onclick="speakPhonics()">Hear it again! 🔊</button>
-            <button onclick="showNextSection('phonics-card')">Done with Phonics! ✅</button>
-        </div>
-        
-        <hr>
-        
-        <!-- Simple Shape Matching -->
-        <div class="card" id="shape-card" style="display:none;">
-            <h2>🔵 Match the Shape!</h2>
-            <div id="shape-target"></div>
-            <div id="shape-options" class="choice-buttons"></div>
-            <p id="shape-feedback" class="feedback"></p>
-            <button onclick="nextShapeProblem()">Next Shape ➡️</button>
-            <button onclick="showNextSection('shape-card')">Done with Shapes! ✅</button>
-        </div>
-
-        <hr>
-
-        <!-- Simple Drawing Pad -->
-        <div class="card" id="drawing-card" style="display:none;">
-            <h2>🖍️ Let's Draw!</h2>
-            <canvas id="drawing-canvas" width="400" height="300"></canvas>
-            <div class="drawing-palette" style="margin-top: 15px;">
-                <button style="background-color: red;" onclick="selectColor('red')" data-color="red" class="selected"></button>
-                <button style="background-color: blue;" onclick="selectColor('blue')" data-color="blue"></button>
-                <button style="background-color: green;" onclick="selectColor('green')" data-color="green"></button>
-                <button style="background-color: black;" onclick="selectColor('black')" data-color="black"></button>
-            </div>
-            <button onclick="clearCanvas()">Clear Drawing 🧼</button>
-            <button onclick="showNextSection('drawing-card')">All Done! 🎉</button>
+        <!-- Navigation Buttons -->
+        <div id="nav-buttons" class="flex justify-between w-full px-4 pb-4 mt-8">
+            <button id="prev-button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-full transition-colors duration-200">Previous</button>
+            <button id="next-button" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">Next</button>
         </div>
 
     </div>
 
     <script>
-        // --- Global Text-to-Speech Function ---
-        function speakText(text) {
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'en-US';
-                speechSynthesis.speak(utterance);
-            } else {
-                console.warn('Speech synthesis not supported in this browser.');
-            }
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const colors = [
+                { name: 'Red', hex: '#ef4444' },
+                { name: 'Blue', hex: '#3b82f6' },
+                { name: 'Yellow', hex: '#fcd34d' },
+                { name: 'Green', hex: '#22c55e' },
+                { name: 'Purple', hex: '#8b5cf6' },
+                { name: 'Orange', hex: '#f97316' },
+                { name: 'Pink', hex: '#ec4899' },
+                { name: 'Black', hex: '#1f2937' },
+                { name: 'White', hex: '#f9fafb' },
+                { name: 'Brown', hex: '#7c2d12' }
+            ];
 
-        // Define the order of sections
-        const sections = [
-            { id: 'counting-card', init: initializeCounting, speak: 'This is a counting game. Tap the add one button to count up to five!' },
-            { id: 'color-card', init: nextColorProblem, speak: 'Let\'s learn about colors! I will ask you to find a color and you tap the right one.' },
-            { id: 'animal-card', init: nextAnimalProblem, speak: 'It\'s time for animal sounds! Listen and guess which animal I am talking about.' },
-            { id: 'alphabet-card', init: nextAlphabetProblem, speak: 'Time to learn the alphabet! Find the letter that I show you.' },
-            { id: 'phonics-card', init: nextPhonicsProblem, speak: 'This is the phonics section! Tap the next sound button to hear a new letter and its sound.' },
-            { id: 'shape-card', init: nextShapeProblem, speak: 'Let\'s learn shapes! Can you match the shapes?' },
-            { id: 'drawing-card', init: initializeDrawing, speak: 'It is time to draw! Pick a color and draw on the canvas. You can clear the drawing when you are done.' }
-        ];
-        let currentSectionIndex = 0;
+            const shapes = [
+                { name: 'Circle', html: '<div class="w-48 h-48 rounded-full bg-indigo-500 shadow-lg"></div>' },
+                { name: 'Square', html: '<div class="w-48 h-48 rounded-lg bg-emerald-500 shadow-lg"></div>' },
+                { name: 'Triangle', html: '<div class="w-0 h-0 border-l-[6rem] border-r-[6rem] border-b-[10.4rem] border-l-transparent border-r-transparent border-b-rose-500"></div>' },
+                { name: 'Star', html: '<div class="relative w-48 h-48"><div class="absolute inset-0 flex items-center justify-center text-yellow-400 text-9xl">★</div></div>' },
+                { name: 'Heart', html: '<div class="relative w-48 h-48"><div class="heart absolute inset-0 text-red-500 text-9xl">❤️</div></div>' }
+            ];
 
-        // --- All Initializations moved to one function ---
-        function startApp() {
-            // Hide the start section
-            document.getElementById('start-section').style.display = 'none';
-            speakText("Hello, and welcome to your new learning adventure!");
-            setTimeout(() => {
-                showNextSection(null);
-            }, 2000);
-        }
-
-        function showNextSection(currentCardId) {
-            if (currentCardId) {
-                document.getElementById(currentCardId).style.display = 'none';
-                currentSectionIndex++;
-            }
+            const letters = [
+                { letter: 'A', word: 'Apple', image: 'https://placehold.co/150x150/ef4444/ffffff?text=A' },
+                { letter: 'B', word: 'Banana', image: 'https://placehold.co/150x150/fcd34d/000000?text=B' },
+                { letter: 'C', word: 'Cat', image: 'https://placehold.co/150x150/9ca3af/ffffff?text=C' },
+                { letter: 'D', word: 'Dog', image: 'https://placehold.co/150x150/f97316/ffffff?text=D' },
+                { letter: 'E', word: 'Elephant', image: 'https://placehold.co/150x150/3b82f6/ffffff?text=E' },
+                { letter: 'F', word: 'Fish', image: 'https://placehold.co/150x150/06b6d4/ffffff?text=F' },
+                { letter: 'G', word: 'Grapes', image: 'https://placehold.co/150x150/22c55e/ffffff?text=G' },
+                { letter: 'H', word: 'Hat', image: 'https://placehold.co/150x150/4b5563/ffffff?text=H' },
+                { letter: 'I', word: 'Igloo', image: 'https://placehold.co/150x150/94a3b8/ffffff?text=I' },
+                { letter: 'J', word: 'Jellyfish', image: 'https://placehold.co/150x150/f472b6/ffffff?text=J' },
+                { letter: 'K', word: 'Kite', image: 'https://placehold.co/150x150/ec4899/ffffff?text=K' },
+                { letter: 'L', word: 'Lion', image: 'https://placehold.co/150x150/ca8a04/ffffff?text=L' },
+                { letter: 'M', word: 'Monkey', image: 'https://placehold.co/150x150/ef4444/ffffff?text=M' },
+                { letter: 'N', word: 'Nest', image: 'https://placehold.co/150x150/8b5cf6/ffffff?text=N' },
+                { letter: 'O', word: 'Owl', image: 'https://placehold.co/150x150/f97316/ffffff?text=O' },
+                { letter: 'P', word: 'Penguin', image: 'https://placehold.co/150x150/4b5563/ffffff?text=P' },
+                { letter: 'Q', word: 'Queen', image: 'https://placehold.co/150x150/a1a1aa/ffffff?text=Q' },
+                { letter: 'R', word: 'Rabbit', image: 'https://placehold.co/150x150/be185d/ffffff?text=R' },
+                { letter: 'S', word: 'Sun', image: 'https://placehold.co/150x150/fcd34d/000000?text=S' },
+                { letter: 'T', word: 'Train', image: 'https://placehold.co/150x150/d1d5db/ffffff?text=T' },
+                { letter: 'U', word: 'Umbrella', image: 'https://placehold.co/150x150/3b82f6/ffffff?text=U' },
+                { letter: 'V', word: 'Violin', image: 'https://placehold.co/150x150/22c55e/ffffff?text=V' },
+                { letter: 'W', word: 'Whale', image: 'https://placehold.co/150x150/06b6d4/ffffff?text=W' },
+                { letter: 'X', word: 'Xylophone', image: 'https://placehold.co/150x150/ec4899/ffffff?text=X' },
+                { letter: 'Y', word: 'Yacht', image: 'https://placehold.co/150x150/60a5fa/ffffff?text=Y' },
+                { letter: 'Z', word: 'Zebra', image: 'https://placehold.co/150x150/9ca3af/ffffff?text=Z' },
+            ];
             
-            if (currentSectionIndex < sections.length) {
-                const nextSection = sections[currentSectionIndex];
-                document.getElementById(nextSection.id).style.display = 'block';
-                speakText(nextSection.speak);
-                nextSection.init();
-            } else {
-                // All sections complete
-                speakText("You did an amazing job! We finished all the games!");
-            }
-        }
+            const animals = [
+                { name: 'Dog', sound: 'Woof woof!', image: 'https://placehold.co/150x150/4b5563/ffffff?text=Dog' },
+                { name: 'Cat', sound: 'Meow meow!', image: 'https://placehold.co/150x150/9ca3af/ffffff?text=Cat' },
+                { name: 'Cow', sound: 'Moo!', image: 'https://placehold.co/150x150/99f6e4/000000?text=Cow' },
+                { name: 'Pig', sound: 'Oink oink!', image: 'https://placehold.co/150x150/ec4899/ffffff?text=Pig' },
+                { name: 'Sheep', sound: 'Baa baa!', image: 'https://placehold.co/150x150/d1d5db/ffffff?text=Sheep' },
+                { name: 'Duck', sound: 'Quack quack!', image: 'https://placehold.co/150x150/fcd34d/000000?text=Duck' },
+                { name: 'Lion', sound: 'Roar!', image: 'https://placehold.co/150x150/ca8a04/ffffff?text=Lion' },
+                { name: 'Elephant', sound: 'Trumpet!', image: 'https://placehold.co/150x150/3b82f6/ffffff?text=Elephant' },
+                { name: 'Horse', sound: 'Neigh!', image: 'https://placehold.co/150x150/7c2d12/ffffff?text=Horse' },
+            ];
 
-        // --- Simple Counting Game (1-5) ---
-        let count = 0;
-        const countingItemsContainer = document.getElementById('counting-items');
-        const countOutput = document.getElementById('count-output');
+            const navButtons = document.getElementById('nav-buttons');
+            const contentArea = document.getElementById('content-area');
+            const tabs = {
+                colors: {
+                    button: document.getElementById('colors-tab'),
+                    index: 0,
+                    data: colors,
+                    render: () => {
+                        const targetColor = tabs.colors.data[tabs.colors.index];
+                        const otherColors = tabs.colors.data.filter(c => c.name !== targetColor.name);
+                        
+                        function getRandomUniqueColors(arr, count) {
+                            const shuffled = arr.sort(() => 0.5 - Math.random());
+                            return shuffled.slice(0, count);
+                        }
+                        
+                        const choices = getRandomUniqueColors(otherColors, 3);
+                        choices.push(targetColor);
+                        choices.sort(() => 0.5 - Math.random());
 
-        function initializeCounting() {
-            resetCounting();
-        }
+                        return `<div class="p-8 rounded-2xl flex flex-col items-center justify-center bg-white shadow-md">
+                                    <span class="text-4xl font-bold text-gray-800 mb-8">Find the color: ${targetColor.name}</span>
+                                    <div id="color-choices" class="grid grid-cols-2 gap-4 w-full max-w-sm">
+                                        ${choices.map(c => `
+                                            <button class="w-full aspect-square rounded-2xl shadow-lg border-4 border-white transition-all duration-100 hover:scale-105"
+                                                    data-color-name="${c.name}"
+                                                    style="background-color: ${c.hex};"></button>
+                                        `).join('')}
+                                    </div>
+                                    <div id="feedback-message" class="mt-8 text-2xl font-bold"></div>
+                                </div>`;
+                    },
+                    init: () => {
+                        navButtons.classList.add('hidden');
+                        document.querySelectorAll('#color-choices button').forEach(button => {
+                            button.addEventListener('click', (e) => {
+                                const feedbackEl = document.getElementById('feedback-message');
+                                if (e.target.dataset.color-name === tabs.colors.data[tabs.colors.index].name) {
+                                    feedbackEl.textContent = "Correct!";
+                                    feedbackEl.classList.remove('text-red-500');
+                                    feedbackEl.classList.add('text-green-500');
+                                    setTimeout(() => {
+                                        tabs.colors.index = (tabs.colors.index + 1) % tabs.colors.data.length;
+                                        renderContent();
+                                    }, 1000);
+                                } else {
+                                    feedbackEl.textContent = "Try again!";
+                                    feedbackEl.classList.remove('text-green-500');
+                                    feedbackEl.classList.add('text-red-500');
+                                }
+                            });
+                        });
+                    }
+                },
+                counting: {
+                    button: document.getElementById('counting-tab'),
+                    index: 0,
+                    data: Array.from({ length: 20 }, (_, i) => i + 1),
+                    render: (number) => {
+                        const stars = Array.from({ length: number }, (_, i) => `<span class="text-yellow-400 text-5xl">★</span>`).join('');
+                        return `<div class="p-8 rounded-2xl flex flex-col items-center justify-center bg-white shadow-md">
+                                    <div class="flex flex-wrap justify-center mb-4">${stars}</div>
+                                    <span class="text-6xl font-bold text-gray-800">${number}</span>
+                                </div>`;
+                    },
+                    init: () => navButtons.classList.remove('hidden')
+                },
+                shapes: {
+                    button: document.getElementById('shapes-tab'),
+                    index: 0,
+                    data: shapes,
+                    render: () => {
+                        const targetShape = tabs.shapes.data[tabs.shapes.index];
+                        const otherShapes = tabs.shapes.data.filter(s => s.name !== targetShape.name);
+                        
+                        function getRandomUniqueShapes(arr, count) {
+                            const shuffled = arr.sort(() => 0.5 - Math.random());
+                            return shuffled.slice(0, count);
+                        }
+                        
+                        const choices = getRandomUniqueShapes(otherShapes, 3);
+                        choices.push(targetShape);
+                        choices.sort(() => 0.5 - Math.random());
 
-        function addCountingItem() {
-            if (count < 5) {
-                count++;
-                countOutput.textContent = count;
-                const item = document.createElement('span');
-                item.classList.add('counting-item');
-                item.textContent = '⭐';
-                countingItemsContainer.appendChild(item);
-                // Removed the speakText call here to avoid repetition.
-            } else {
-                countOutput.textContent = "Great job! You counted to 5! 🎉";
-                speakText("Great job! You counted to 5!");
-            }
-        }
+                        return `<div class="p-8 rounded-2xl flex flex-col items-center justify-center bg-white shadow-md">
+                                    <span class="text-4xl font-bold text-gray-800 mb-8">Find the shape: ${targetShape.name}</span>
+                                    <div id="shape-choices" class="grid grid-cols-2 gap-4 w-full max-w-sm">
+                                        ${choices.map(s => `
+                                            <button class="w-full aspect-square rounded-2xl shadow-lg border-4 border-white transition-all duration-100 hover:scale-105 flex items-center justify-center"
+                                                    data-shape-name="${s.name}">
+                                                ${s.html}
+                                            </button>
+                                        `).join('')}
+                                    </div>
+                                    <div id="feedback-message" class="mt-8 text-2xl font-bold"></div>
+                                </div>`;
+                    },
+                    init: () => {
+                        navButtons.classList.add('hidden');
+                        document.querySelectorAll('#shape-choices button').forEach(button => {
+                            button.addEventListener('click', (e) => {
+                                const feedbackEl = document.getElementById('feedback-message');
+                                if (e.currentTarget.dataset.shapeName === tabs.shapes.data[tabs.shapes.index].name) {
+                                    feedbackEl.textContent = "Correct!";
+                                    feedbackEl.classList.remove('text-red-500');
+                                    feedbackEl.classList.add('text-green-500');
+                                    setTimeout(() => {
+                                        tabs.shapes.index = (tabs.shapes.index + 1) % tabs.shapes.data.length;
+                                        renderContent();
+                                    }, 1000);
+                                } else {
+                                    feedbackEl.textContent = "Try again!";
+                                    feedbackEl.classList.remove('text-green-500');
+                                    feedbackEl.classList.add('text-red-500');
+                                }
+                            });
+                        });
+                    }
+                },
+                letters: {
+                    button: document.getElementById('letters-tab'),
+                    index: 0,
+                    data: letters,
+                    render: () => {
+                        const targetLetter = tabs.letters.data[tabs.letters.index];
+                        const otherLetters = tabs.letters.data.filter(l => l.letter !== targetLetter.letter);
+                        
+                        function getRandomUniqueItems(arr, count) {
+                            const shuffled = arr.sort(() => 0.5 - Math.random());
+                            return shuffled.slice(0, count);
+                        }
 
-        function resetCounting() {
-            count = 0;
-            countOutput.textContent = 0;
-            countingItemsContainer.innerHTML = '';
-            speakText("Counting game reset!");
-        }
+                        const choices = getRandomUniqueItems(otherLetters, 3);
+                        choices.push(targetLetter);
+                        choices.sort(() => 0.5 - Math.random());
 
-        // --- Color Recognition Game ---
-        const colors = [
-            { name: 'Red', hex: 'red', emoji: '🍓', img: 'https://placehold.co/150x150/ff0000/fff?text=Red' },
-            { name: 'Blue', hex: 'blue', emoji: '💧', img: 'https://placehold.co/150x150/0000ff/fff?text=Blue' },
-            { name: 'Green', hex: 'green', emoji: '🌳', img: 'https://placehold.co/150x150/00ff00/fff?text=Green' },
-            { name: 'Yellow', hex: 'yellow', emoji: '☀️', img: 'https://placehold.co/150x150/ffff00/000?text=Yellow' },
-            { name: 'Orange', hex: 'orange', emoji: '🍊', img: 'https://placehold.co/150x150/ffa500/fff?text=Orange' },
-            { name: 'Purple', hex: 'purple', emoji: '🍇', img: 'https://placehold.co/150x150/800080/fff?text=Purple' }
-        ];
-        const colorQuestionEl = document.getElementById('color-question');
-        const colorOptionsEl = document.getElementById('color-options');
-        const colorFeedbackEl = document.getElementById('color-feedback');
-        const colorTargetImgEl = document.getElementById('color-target-img');
-        const colorTargetImgContainerEl = document.getElementById('color-target-img-container');
-        let currentCorrectColor;
-
-        function nextColorProblem() {
-            colorOptionsEl.innerHTML = '';
-            colorFeedbackEl.textContent = '';
+                        return `<div class="p-8 rounded-2xl flex flex-col items-center justify-center bg-white shadow-md">
+                                    <span class="text-6xl font-bold text-gray-800 mb-8">${targetLetter.letter}</span>
+                                    <div id="letter-choices" class="grid grid-cols-2 gap-4 w-full max-w-sm">
+                                        ${choices.map(c => `
+                                            <button class="w-full aspect-square rounded-2xl shadow-lg border-4 border-white transition-all duration-100 hover:scale-105 flex flex-col items-center justify-center"
+                                                    data-word="${c.word}">
+                                                <img src="${c.image}" alt="${c.word}" class="w-24 h-24 mb-2">
+                                                <span class="text-xl font-bold text-gray-800">${c.word}</span>
+                                            </button>
+                                        `).join('')}
+                                    </div>
+                                    <div id="feedback-message" class="mt-8 text-2xl font-bold"></div>
+                                </div>`;
+                    },
+                    init: () => {
+                        navButtons.classList.add('hidden');
+                        document.querySelectorAll('#letter-choices button').forEach(button => {
+                            button.addEventListener('click', (e) => {
+                                const feedbackEl = document.getElementById('feedback-message');
+                                const selectedWord = e.currentTarget.dataset.word;
+                                if (selectedWord === tabs.letters.data[tabs.letters.index].word) {
+                                    feedbackEl.textContent = "Correct!";
+                                    feedbackEl.classList.remove('text-red-500');
+                                    feedbackEl.classList.add('text-green-500');
+                                    setTimeout(() => {
+                                        tabs.letters.index = (tabs.letters.index + 1) % tabs.letters.data.length;
+                                        renderContent();
+                                    }, 1000);
+                                } else {
+                                    feedbackEl.textContent = "Try again!";
+                                    feedbackEl.classList.remove('text-green-500');
+                                    feedbackEl.classList.add('text-red-500');
+                                }
+                            });
+                        });
+                    }
+                },
+                animals: {
+                    button: document.getElementById('animals-tab'),
+                    index: 0,
+                    data: animals,
+                    render: (item) => {
+                        return `<div class="p-8 rounded-2xl flex flex-col items-center justify-center bg-white shadow-md">
+                                    <img src="${item.image}" alt="${item.name}" class="rounded-xl w-48 h-48 mb-4 shadow-lg">
+                                    <div class="flex items-center space-x-4 mb-4">
+                                        <button id="sound-button" class="bg-purple-500 hover:bg-purple-600 text-white p-3 rounded-full shadow-lg transition-colors duration-200">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.47-9.544a8 8 0 010 12.112M11 5l-4 4H3a2 2 0 00-2 2v2a2 2 0 002 2h4l4 4V5z" />
+                                            </svg>
+                                        </button>
+                                        <span class="text-6xl font-bold text-gray-800">${item.name}</span>
+                                    </div>
+                                    <span class="text-4xl font-bold text-gray-800">${item.sound}</span>
+                                </div>`;
+                    },
+                    init: () => {
+                        navButtons.classList.remove('hidden');
+                        document.getElementById('sound-button').addEventListener('click', () => {
+                            const currentItem = tabs.animals.data[tabs.animals.index];
+                            const speech = new SpeechSynthesisUtterance(`The ${currentItem.name} says, ${currentItem.sound}`);
+                            window.speechSynthesis.speak(speech);
+                        });
+                    }
+                }
+            };
             
-            const shuffledColors = [...colors].sort(() => 0.5 - Math.random());
-            currentCorrectColor = shuffledColors[0];
-            const incorrectColors = shuffledColors.slice(1, 3);
-            const options = [currentCorrectColor, ...incorrectColors].sort(() => 0.5 - Math.random());
+            let currentTab = tabs.animals;
 
-            const isImageQuestion = Math.random() > 0.5;
-
-            if (isImageQuestion) {
-                colorQuestionEl.textContent = `Can you find the color that matches this picture?`;
-                colorTargetImgEl.src = currentCorrectColor.img;
-                colorTargetImgContainerEl.style.display = 'block';
-            } else {
-                colorQuestionEl.textContent = `Can you find the ${currentCorrectColor.name} button?`;
-                colorTargetImgContainerEl.style.display = 'none';
+            function renderContent() {
+                // Check if the current tab has a specific render function or uses the default one
+                if (currentTab.render.length > 0) { // Sequential tabs like Counting and Animals need data passed
+                    const currentItem = currentTab.data[currentTab.index];
+                    contentArea.innerHTML = currentTab.render(currentItem);
+                } else { // Challenge tabs like Colors, Shapes, and Letters handle data internally
+                    contentArea.innerHTML = currentTab.render();
+                }
+                currentTab.init();
             }
 
-            options.forEach(color => {
-                const button = document.createElement('button');
-                button.textContent = color.emoji;
-                button.style.backgroundColor = color.hex;
-                button.onclick = () => checkColorAnswer(color.name);
-                colorOptionsEl.appendChild(button);
-            });
-        }
-
-        function checkColorAnswer(selectedColorName) {
-            if (selectedColorName === currentCorrectColor.name) {
-                colorFeedbackEl.textContent = "Yay! You got it! 🎉";
-                speakText("Yay! You got it!");
-            } else {
-                colorFeedbackEl.textContent = "Oops! Try again! 🤔";
-                speakText("Oops! Try again!");
+            function updateTabButtons() {
+                for (const key in tabs) {
+                    const tab = tabs[key];
+                    if (tab === currentTab) {
+                        tab.button.classList.add('active');
+                        tab.button.style.backgroundColor = '#d1d5db';
+                        tab.button.style.color = '#1f2937';
+                    } else {
+                        tab.button.classList.remove('active');
+                        tab.button.style.backgroundColor = 'transparent';
+                        tab.button.style.color = '#6b7280';
+                    }
+                }
             }
-        }
-        
-        // --- Animal Sounds Quiz ---
-        const animals = [
-            { name: 'Dog', sound: 'woof woof!', image: 'https://placehold.co/250x250/fff/333?text=Dog' },
-            { name: 'Cat', sound: 'meow!', image: 'https://placehold.co/250x250/fff/333?text=Cat' },
-            { name: 'Cow', sound: 'moo!', image: 'https://placehold.co/250x250/fff/333?text=Cow' },
-            { name: 'Duck', sound: 'quack!', image: 'https://placehold.co/250x250/fff/333?text=Duck' }
-        ];
-        const animalImageDisplay = document.getElementById('animal-image-display');
-        const animalOptionsEl = document.getElementById('animal-options');
-        const animalFeedbackEl = document.getElementById('animal-feedback');
-        let currentAnimal;
 
-        function nextAnimalProblem() {
-            animalOptionsEl.innerHTML = '';
-            animalFeedbackEl.textContent = '';
-            
-            const shuffledAnimals = [...animals].sort(() => 0.5 - Math.random());
-            currentAnimal = shuffledAnimals[0];
-            const incorrectAnimals = shuffledAnimals.slice(1, 3);
-            const options = [currentAnimal, ...incorrectAnimals].sort(() => 0.5 - Math.random());
-
-            animalImageDisplay.src = currentAnimal.image;
-            animalImageDisplay.alt = currentAnimal.name;
-            speakText(`What animal says, ${currentAnimal.sound}`);
-            animalFeedbackEl.textContent = `What animal is this?`;
-
-            options.forEach(animal => {
-                const button = document.createElement('button');
-                button.textContent = animal.name;
-                button.onclick = () => checkAnimalAnswer(animal.name);
-                animalOptionsEl.appendChild(button);
-            });
-        }
-        
-        function checkAnimalAnswer(selectedAnimalName) {
-            if (selectedAnimalName === currentAnimal.name) {
-                animalFeedbackEl.textContent = `Yes, a ${currentAnimal.name}! Great job! 🎉`;
-                speakText(`Yes, a ${currentAnimal.name}! Great job!`);
-            } else {
-                animalFeedbackEl.textContent = "Oops! Try again! 🤔";
-                speakText("Oops! Try again!");
+            function handleNavigation(direction) {
+                if (direction === 'next') {
+                    currentTab.index = (currentTab.index + 1) % currentTab.data.length;
+                } else {
+                    currentTab.index = (currentTab.index - 1 + currentTab.data.length) % currentTab.data.length;
+                }
+                renderContent();
             }
-        }
 
-        // --- Alphabet Matching Game ---
-        const alphabet = [
-            { letter: 'A', word: 'Apple', image: 'https://placehold.co/250x250/fff/333?text=Apple' },
-            { letter: 'B', word: 'Ball', image: 'https://placehold.co/250x250/fff/333?text=Ball' },
-            { letter: 'C', word: 'Cat', image: 'https://placehold.co/250x250/fff/333?text=Cat' },
-            { letter: 'D', word: 'Duck', image: 'https://placehold.co/250x250/fff/333?text=Duck' },
-            { letter: 'E', word: 'Elephant', image: 'https://placehold.co/250x250/fff/333?text=Elephant' }
-        ];
-        const alphabetTargetEl = document.getElementById('alphabet-target');
-        const alphabetOptionsEl = document.getElementById('alphabet-options');
-        const alphabetWordEl = document.getElementById('alphabet-word');
-        const alphabetImageEl = document.getElementById('alphabet-image');
-        const alphabetFeedbackEl = document.getElementById('alphabet-feedback');
-        let currentAlphabet;
+            document.getElementById('next-button').addEventListener('click', () => handleNavigation('next'));
+            document.getElementById('prev-button').addEventListener('click', () => handleNavigation('prev'));
 
-        function nextAlphabetProblem() {
-            alphabetOptionsEl.innerHTML = '';
-            alphabetFeedbackEl.textContent = '';
-            const shuffledAlphabet = [...alphabet].sort(() => 0.5 - Math.random());
-            currentAlphabet = shuffledAlphabet[0];
-            const incorrectOptions = shuffledAlphabet.slice(1, 3);
-            const options = [currentAlphabet, ...incorrectOptions].sort(() => 0.5 - Math.random());
-
-            alphabetTargetEl.textContent = currentAlphabet.letter;
-            alphabetWordEl.textContent = currentAlphabet.word;
-            alphabetImageEl.src = currentAlphabet.image;
-
-            speakText(`Can you find the letter ${currentAlphabet.letter}?`);
-
-            options.forEach(item => {
-                const button = document.createElement('button');
-                button.textContent = item.letter.toLowerCase(); // Show lowercase option
-                button.onclick = () => checkAlphabetAnswer(item.letter);
-                alphabetOptionsEl.appendChild(button);
-            });
-        }
-
-        function checkAlphabetAnswer(selectedLetter) {
-            if (selectedLetter === currentAlphabet.letter) {
-                alphabetFeedbackEl.textContent = `Yes! That's the letter ${currentAlphabet.letter}! 🎉`;
-                speakText(`Yes! That's the letter ${currentAlphabet.letter}!`);
-            } else {
-                alphabetFeedbackEl.textContent = "Oops! That's not it. Try again! 🤔";
-                speakText("Oops! That's not it. Try again!");
+            for (const key in tabs) {
+                tabs[key].button.addEventListener('click', () => {
+                    currentTab = tabs[key];
+                    currentTab.index = 0; // Reset index when changing tabs
+                    renderContent();
+                    updateTabButtons();
+                });
             }
-        }
-        
 
-        // --- Phonics Section ---
-        const phonics = [
-            { letter: 'A', sound: 'Ah', word: 'Apple', image: 'https://placehold.co/250x250/fff/333?text=Apple' },
-            { letter: 'B', sound: 'Buh', word: 'Ball', image: 'https://placehold.co/250x250/fff/333?text=Ball' },
-            { letter: 'C', sound: 'Cuh', word: 'Cat', image: 'https://placehold.co/250x250/fff/333?text=Cat' },
-            { letter: 'D', sound: 'Duh', word: 'Duck', image: 'https://placehold.co/250x250/fff/333?text=Duck' },
-            { letter: 'E', sound: 'Eh', word: 'Egg', image: 'https://placehold.co/250x250/fff/333?text=Egg' }
-        ];
-        let currentPhonicsIdx = 0;
-        const phonicsLetterEl = document.getElementById('phonics-letter');
-        const phonicsWordEl = document.getElementById('phonics-word');
-        const phonicsImageEl = document.getElementById('phonics-image');
-
-        function nextPhonicsProblem() {
-            currentPhonicsIdx = (currentPhonicsIdx + 1) % phonics.length;
-            const item = phonics[currentPhonicsIdx];
-            phonicsLetterEl.textContent = item.letter;
-            phonicsWordEl.textContent = item.word;
-            phonicsImageEl.src = item.image;
-            speakPhonics();
-        }
-
-        function speakPhonics() {
-            const item = phonics[currentPhonicsIdx];
-            // First say the letter name, then the sound and word
-            speakText(`The letter is ${item.letter}. The sound is ${item.sound}, as in ${item.word}.`);
-        }
-        
-        // --- Simple Shape Matching ---
-        const shapes = [
-            { name: 'circle', text: '🔵', shape: '50%' },
-            { name: 'square', text: '🟥', shape: '10px' },
-            { name: 'triangle', text: '🔺', shape: '10px', svg: '<svg width="100%" height="100%" viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="#ff69b4" /></svg>' }
-        ];
-        let currentShape;
-        const shapeTargetEl = document.getElementById('shape-target');
-        const shapeOptionsEl = document.getElementById('shape-options');
-        const shapeFeedbackEl = document.getElementById('shape-feedback');
-
-        function nextShapeProblem() {
-            shapeOptionsEl.innerHTML = '';
-            shapeFeedbackEl.textContent = '';
-            
-            const shuffledShapes = [...shapes].sort(() => 0.5 - Math.random());
-            currentShape = shuffledShapes[0];
-            const incorrectShapes = shuffledShapes.slice(1, 3);
-            const options = [currentShape, ...incorrectShapes].sort(() => 0.5 - Math.random());
-
-            shapeTargetEl.textContent = '';
-            shapeTargetEl.style.borderRadius = currentShape.shape;
-            
-            if (currentShape.svg) {
-                shapeTargetEl.innerHTML = currentShape.svg;
-                shapeTargetEl.style.backgroundColor = 'transparent';
-                shapeTargetEl.style.border = 'none';
-            } else {
-                shapeTargetEl.innerHTML = currentShape.text;
-                shapeTargetEl.style.backgroundColor = '#ff69b4';
-                shapeTargetEl.style.border = '4px solid #8a2be2';
-            }
-            
-            speakText(`Can you find the ${currentShape.name}?`);
-
-            options.forEach(shape => {
-                const button = document.createElement('button');
-                button.textContent = shape.text;
-                button.dataset.name = shape.name;
-                button.onclick = () => checkShapeAnswer(shape.name);
-                shapeOptionsEl.appendChild(button);
-            });
-        }
-
-        function checkShapeAnswer(guess) {
-            if (guess === currentShape.name) {
-                shapeFeedbackEl.textContent = "Yay! You got it right! 🎉";
-                speakText("Yay! You got it right!");
-            } else {
-                shapeFeedbackEl.textContent = "Oops! Try again! 🤔";
-                speakText("Oops! Try again!");
-            }
-        }
-        
-
-        // --- Simple Drawing Pad ---
-        const canvas = document.getElementById('drawing-canvas');
-        const ctx = canvas.getContext('2d');
-        let isDrawing = false;
-        let lastX = 0;
-        let lastY = 0;
-        let currentColor = 'red';
-        const colorButtons = document.querySelectorAll('.drawing-palette button');
-
-        function initializeDrawing() {
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            selectColor('red'); // Set default color
-        }
-
-        function draw(e) {
-            if (!isDrawing) return;
-            ctx.strokeStyle = currentColor;
-            ctx.lineWidth = 5;
-            ctx.lineCap = 'round';
-            ctx.lineTo(e.offsetX, e.offsetY);
-            ctx.stroke();
-            [lastX, lastY] = [e.offsetX, e.offsetY];
-        }
-
-        canvas.addEventListener('pointerdown', (e) => {
-            isDrawing = true;
-            [lastX, lastY] = [e.offsetX, e.offsetY];
-            ctx.beginPath();
-            ctx.moveTo(lastX, lastY);
+            // Initial render
+            renderContent();
+            updateTabButtons();
         });
-
-        canvas.addEventListener('pointermove', draw);
-        canvas.addEventListener('pointerup', () => isDrawing = false);
-        canvas.addEventListener('pointerleave', () => isDrawing = false);
-
-        function selectColor(color) {
-            currentColor = color;
-            colorButtons.forEach(btn => btn.classList.remove('selected'));
-            document.querySelector(`[data-color="${color}"]`).classList.add('selected');
-            speakText(`You picked the color ${color}.`);
-        }
-
-        function clearCanvas() {
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            speakText("Canvas cleared!");
-        }
-
-        // Initialize all sections on page load
-        window.onload = function() {
-            // The start button will now trigger all initializations
-        };
-
     </script>
 </body>
 </html>
