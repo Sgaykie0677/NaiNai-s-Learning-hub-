@@ -337,13 +337,16 @@
             // Now, run all the initial voice prompts
             speakText("Hello, and welcome to your new learning adventure!");
             
-            initializeCounting();
-            initializeColors();
-            initializeAnimals();
-            initializeAlphabet();
-            initializePhonics();
-            initializeShapes();
-            initializeDrawing();
+            // Wait for the welcome message to finish before initializing the sections
+            setTimeout(() => {
+                initializeCounting();
+                initializeColors();
+                initializeAnimals();
+                initializeAlphabet();
+                initializePhonics();
+                initializeShapes();
+                initializeDrawing();
+            }, 1000); // Give it a second to speak the welcome message.
         }
 
         // --- Simple Counting Game (1-5) ---
@@ -353,7 +356,8 @@
 
         function initializeCounting() {
             resetCounting();
-            speakText("Let's count! Tap the button to add a star!");
+            // The prompt is now triggered by a user action.
+            // speakText("Let's count! Tap the button to add a star!");
         }
 
         function addCountingItem() {
@@ -390,7 +394,8 @@
 
         function initializeColors() {
             changeColor('red'); // Set a default color
-            speakText("What color is this?");
+            // The prompt is now triggered by a user action.
+            // speakText("What color is this?");
         }
 
         function changeColor(color) {
@@ -414,7 +419,8 @@
 
         function initializeAnimals() {
             nextAnimal();
-            speakText("Let's learn about animals! Who am I?");
+            // The prompt is now triggered by a user action.
+            // speakText("Let's learn about animals! Who am I?");
         }
 
         function nextAnimal() {
@@ -451,7 +457,8 @@
 
         function initializeAlphabet() {
             updateAlphabetContent();
-            speakText("Let's learn the alphabet!");
+            // The prompt is now triggered by a user action.
+            // speakText("Let's learn the alphabet!");
         }
 
         function updateAlphabetContent() {
@@ -489,7 +496,8 @@
 
         function initializePhonics() {
             updatePhonicsContent();
-            speakText("Let's learn the sounds!");
+            // The prompt is now triggered by a user action.
+            // speakText("Let's learn the sounds!");
         }
 
         function updatePhonicsContent() {
@@ -524,7 +532,8 @@
 
         function initializeShapes() {
             generateShapeProblem();
-            speakText("Match the shape! Find the shape that looks the same.");
+            // The prompt is now triggered by a user action.
+            // speakText("Match the shape! Find the shape that looks the same.");
         }
 
         function generateShapeProblem() {
@@ -586,7 +595,8 @@
             ctx.fillStyle = 'white';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             selectColor('red'); // Set default color
-            speakText("Let's draw! Pick a color and draw something fun.");
+            // The prompt is now triggered by a user action.
+            // speakText("Let's draw! Pick a color and draw something fun.");
         }
 
         function draw(e) {
@@ -614,6 +624,7 @@
             currentColor = color;
             colorButtons.forEach(btn => btn.classList.remove('selected'));
             document.querySelector(`[data-color="${color}"]`).classList.add('selected');
+            speakText("Let's draw! Pick a color and draw something fun.");
         }
 
         function clearCanvas() {
