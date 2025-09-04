@@ -158,6 +158,7 @@
         .animal-img-container {
             min-height: 200px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
         }
@@ -204,6 +205,21 @@
             from { opacity: 0; transform: scale(0.9); }
             to { opacity: 1; transform: scale(1); }
         }
+        .choice-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .choice-buttons button {
+            padding: 10px 20px;
+            font-size: 1.5em;
+            width: clamp(50px, 12vw, 80px);
+            height: clamp(50px, 12vw, 80px);
+        }
+        .choice-buttons button.correct { background-color: #90ee90; }
+        .choice-buttons button.incorrect { background-color: #ffb6c1; }
     </style>
 </head>
 <body>
@@ -235,15 +251,14 @@
 
         <!-- Color Recognition -->
         <div class="card">
-            <h2>🎨 What Color is This?</h2>
-            <div id="color-display"></div>
-            <div class="color-palette">
-                <button style="background-color: red;" onclick="changeColor('red')"></button>
-                <button style="background-color: blue;" onclick="changeColor('blue')"></button>
-                <button style="background-color: green;" onclick="changeColor('green')"></button>
-                <button style="background-color: yellow;" onclick="changeColor('yellow')"></button>
+            <h2>🎨 Find a Color!</h2>
+            <div id="color-question" class="feedback"></div>
+            <div id="color-target-img-container" style="display: none;">
+                <img id="color-target-img" src="" style="max-width: 150px; border-radius: 10px;" alt="">
             </div>
+            <div id="color-options" class="choice-buttons"></div>
             <p id="color-feedback" class="feedback"></p>
+            <button onclick="nextColorProblem()">Next Color ➡️</button>
         </div>
 
         <hr>
@@ -254,23 +269,26 @@
             <div class="animal-img-container">
                 <img id="animal-image-display" src="" alt="Animal">
             </div>
-            <button onclick="makeAnimalSound()">Tell me my sound!</button>
-            <button onclick="nextAnimal()">Next Animal ➡️</button>
+            <div id="animal-options" class="choice-buttons"></div>
             <p id="animal-feedback" class="feedback"></p>
+            <button onclick="nextAnimalProblem()">Next Animal ➡️</button>
         </div>
 
         <hr>
 
         <!-- Let's Learn the Alphabet -->
         <div class="card">
-            <h2>🔤 Let's Learn the Alphabet!</h2>
+            <h2>🔤 Find the Letter!</h2>
             <div class="alphabet-content">
-                <span class="letter-display" id="alphabet-letter">A</span>
-                <span class="word-display" id="alphabet-word">Apple</span>
-                <img class="word-image" id="alphabet-image" src="https://placehold.co/250x250/fff/333?text=Apple" alt="Apple">
+                <div id="alphabet-target"></div>
+                <div id="alphabet-word-container">
+                    <span class="word-display" id="alphabet-word"></span>
+                    <img class="word-image" id="alphabet-image" src="" alt="">
+                </div>
             </div>
-            <button onclick="nextAlphabetLetter()">Next Letter ➡️</button>
-            <button onclick="speakAlphabet()">What is this? 🗣️</button>
+            <div id="alphabet-options" class="choice-buttons"></div>
+            <p id="alphabet-feedback" class="feedback"></p>
+            <button onclick="nextAlphabetProblem()">Next Letter ➡️</button>
         </div>
 
         <hr>
@@ -279,12 +297,12 @@
         <div class="card">
             <h2>🗣️ Let's Learn the Sounds!</h2>
             <div class="phonics-content">
-                <span class="letter-display" id="phonics-letter">A</span>
-                <span class="word-display" id="phonics-word">Apple</span>
-                <img class="word-image" id="phonics-image" src="https://placehold.co/250x250/fff/333?text=Apple" alt="Apple">
+                <span class="letter-display" id="phonics-letter"></span>
+                <span class="word-display" id="phonics-word"></span>
+                <img class="word-image" id="phonics-image" src="" alt="">
             </div>
-            <button onclick="nextPhonicsLetter()">Next Sound ➡️</button>
-            <button onclick="speakPhonics()">Hear the sound 🔊</button>
+            <button onclick="nextPhonicsProblem()">Next Sound ➡️</button>
+            <button onclick="speakPhonics()">Hear it again! 🔊</button>
         </div>
         
         <hr>
@@ -293,11 +311,9 @@
         <div class="card">
             <h2>🔵 Match the Shape!</h2>
             <div id="shape-target"></div>
-            <p class="feedback">Tap the button that matches the shape above!</p>
-            <div class="shape-option-container">
-                <!-- Shape options will be generated here -->
-            </div>
+            <div id="shape-options" class="choice-buttons"></div>
             <p id="shape-feedback" class="feedback"></p>
+            <button onclick="nextShapeProblem()">Next Shape ➡️</button>
         </div>
 
         <hr>
@@ -340,12 +356,12 @@
             // Wait for the welcome message to finish before initializing the sections
             setTimeout(() => {
                 initializeCounting();
-                initializeColors();
-                initializeAnimals();
-                initializeAlphabet();
-                initializePhonics();
-                initializeShapes();
                 initializeDrawing();
+                nextColorProblem();
+                nextAnimalProblem();
+                nextAlphabetProblem();
+                nextPhonicsProblem();
+                nextShapeProblem();
             }, 1000); // Give it a second to speak the welcome message.
         }
 
@@ -356,8 +372,6 @@
 
         function initializeCounting() {
             resetCounting();
-            // The prompt is now triggered by a user action.
-            // speakText("Let's count! Tap the button to add a star!");
         }
 
         function addCountingItem() {
@@ -382,102 +396,152 @@
             speakText("Counting game reset!");
         }
 
-        // --- Color Recognition ---
-        const colorDisplay = document.getElementById('color-display');
-        const colorFeedback = document.getElementById('color-feedback');
-        const colorData = {
-            'red': { name: 'Red', emoji: '🍓' },
-            'blue': { name: 'Blue', emoji: '💧' },
-            'green': { name: 'Green', emoji: '🌳' },
-            'yellow': { name: 'Yellow', emoji: '☀️' }
-        };
+        // --- Color Recognition Game ---
+        const colors = [
+            { name: 'Red', hex: 'red', emoji: '🍓', img: 'https://placehold.co/150x150/ff0000/fff?text=Red' },
+            { name: 'Blue', hex: 'blue', emoji: '💧', img: 'https://placehold.co/150x150/0000ff/fff?text=Blue' },
+            { name: 'Green', hex: 'green', emoji: '🌳', img: 'https://placehold.co/150x150/00ff00/fff?text=Green' },
+            { name: 'Yellow', hex: 'yellow', emoji: '☀️', img: 'https://placehold.co/150x150/ffff00/000?text=Yellow' },
+            { name: 'Orange', hex: 'orange', emoji: '🍊', img: 'https://placehold.co/150x150/ffa500/fff?text=Orange' },
+            { name: 'Purple', hex: 'purple', emoji: '🍇', img: 'https://placehold.co/150x150/800080/fff?text=Purple' }
+        ];
+        const colorQuestionEl = document.getElementById('color-question');
+        const colorOptionsEl = document.getElementById('color-options');
+        const colorFeedbackEl = document.getElementById('color-feedback');
+        const colorTargetImgEl = document.getElementById('color-target-img');
+        const colorTargetImgContainerEl = document.getElementById('color-target-img-container');
+        let currentCorrectColor;
 
-        function initializeColors() {
-            changeColor('red'); // Set a default color
-            // The prompt is now triggered by a user action.
-            // speakText("What color is this?");
+        function nextColorProblem() {
+            colorOptionsEl.innerHTML = '';
+            colorFeedbackEl.textContent = '';
+            
+            const shuffledColors = [...colors].sort(() => 0.5 - Math.random());
+            currentCorrectColor = shuffledColors[0];
+            const incorrectColors = shuffledColors.slice(1, 3);
+            const options = [currentCorrectColor, ...incorrectColors].sort(() => 0.5 - Math.random());
+
+            const isImageQuestion = Math.random() > 0.5;
+
+            if (isImageQuestion) {
+                colorQuestionEl.textContent = `Can you find the color that matches this picture?`;
+                colorTargetImgEl.src = currentCorrectColor.img;
+                colorTargetImgContainerEl.style.display = 'block';
+                speakText(`Can you find the color that matches the picture?`);
+            } else {
+                colorQuestionEl.textContent = `Can you find the ${currentCorrectColor.name} button?`;
+                colorTargetImgContainerEl.style.display = 'none';
+                speakText(`Can you find the ${currentCorrectColor.name} button?`);
+            }
+
+            options.forEach(color => {
+                const button = document.createElement('button');
+                button.textContent = color.emoji;
+                button.style.backgroundColor = color.hex;
+                button.onclick = () => checkColorAnswer(color.name);
+                colorOptionsEl.appendChild(button);
+            });
         }
 
-        function changeColor(color) {
-            const data = colorData[color];
-            colorDisplay.style.backgroundColor = color;
-            colorDisplay.textContent = data.emoji;
-            colorFeedback.textContent = `Wow! That's the color ${data.name}!`;
-            speakText(`That's the color ${data.name}!`);
+        function checkColorAnswer(selectedColorName) {
+            if (selectedColorName === currentCorrectColor.name) {
+                colorFeedbackEl.textContent = "Yay! You got it! 🎉";
+                speakText("Yay! You got it!");
+            } else {
+                colorFeedbackEl.textContent = "Oops! Try again! 🤔";
+                speakText("Oops! Try again!");
+            }
         }
-
-        // --- Animal Sounds ---
+        
+        // --- Animal Sounds Quiz ---
         const animals = [
             { name: 'Dog', sound: 'woof woof!', image: 'https://placehold.co/250x250/fff/333?text=Dog' },
             { name: 'Cat', sound: 'meow!', image: 'https://placehold.co/250x250/fff/333?text=Cat' },
             { name: 'Cow', sound: 'moo!', image: 'https://placehold.co/250x250/fff/333?text=Cow' },
             { name: 'Duck', sound: 'quack!', image: 'https://placehold.co/250x250/fff/333?text=Duck' }
         ];
-        let currentAnimalIdx = 0;
         const animalImageDisplay = document.getElementById('animal-image-display');
-        const animalFeedback = document.getElementById('animal-feedback');
+        const animalOptionsEl = document.getElementById('animal-options');
+        const animalFeedbackEl = document.getElementById('animal-feedback');
+        let currentAnimal;
 
-        function initializeAnimals() {
-            nextAnimal();
-            // The prompt is now triggered by a user action.
-            // speakText("Let's learn about animals! Who am I?");
-        }
+        function nextAnimalProblem() {
+            animalOptionsEl.innerHTML = '';
+            animalFeedbackEl.textContent = '';
+            
+            const shuffledAnimals = [...animals].sort(() => 0.5 - Math.random());
+            currentAnimal = shuffledAnimals[0];
+            const incorrectAnimals = shuffledAnimals.slice(1, 3);
+            const options = [currentAnimal, ...incorrectAnimals].sort(() => 0.5 - Math.random());
 
-        function nextAnimal() {
-            currentAnimalIdx = (currentAnimalIdx + 1) % animals.length;
-            const animal = animals[currentAnimalIdx];
-            animalImageDisplay.src = animal.image;
-            animalImageDisplay.alt = animal.name;
-            animalFeedback.textContent = `Can you make the sound of a ${animal.name}?`;
-            speakText(`Can you make the sound of a ${animal.name}?`);
-        }
+            animalImageDisplay.src = currentAnimal.image;
+            animalImageDisplay.alt = currentAnimal.name;
+            speakText(`What animal says, ${currentAnimal.sound}`);
+            animalFeedbackEl.textContent = `What animal is this?`;
 
-        function makeAnimalSound() {
-            const animal = animals[currentAnimalIdx];
-            animalFeedback.textContent = `A ${animal.name} says ${animal.sound}!`;
-            speakText(`A ${animal.name} says ${animal.sound}!`);
+            options.forEach(animal => {
+                const button = document.createElement('button');
+                button.textContent = animal.name;
+                button.onclick = () => checkAnimalAnswer(animal.name);
+                animalOptionsEl.appendChild(button);
+            });
         }
         
+        function checkAnimalAnswer(selectedAnimalName) {
+            if (selectedAnimalName === currentAnimal.name) {
+                animalFeedbackEl.textContent = `Yes, a ${currentAnimal.name}! Great job! 🎉`;
+                speakText(`Yes, a ${currentAnimal.name}! Great job!`);
+            } else {
+                animalFeedbackEl.textContent = "Oops! Try again! 🤔";
+                speakText("Oops! Try again!");
+            }
+        }
 
-        // --- Alphabet Learning ---
+        // --- Alphabet Matching Game ---
         const alphabet = [
             { letter: 'A', word: 'Apple', image: 'https://placehold.co/250x250/fff/333?text=Apple' },
             { letter: 'B', word: 'Ball', image: 'https://placehold.co/250x250/fff/333?text=Ball' },
             { letter: 'C', word: 'Cat', image: 'https://placehold.co/250x250/fff/333?text=Cat' },
             { letter: 'D', word: 'Duck', image: 'https://placehold.co/250x250/fff/333?text=Duck' },
-            { letter: 'E', word: 'Elephant', image: 'https://placehold.co/250x250/fff/333?text=Elephant' },
-            { letter: 'F', word: 'Fish', image: 'https://placehold.co/250x250/fff/333?text=Fish' },
-            { letter: 'G', word: 'Grape', image: 'https://placehold.co/250x250/fff/333?text=Grape' },
-            { letter: 'H', word: 'Hat', image: 'https://placehold.co/250x250/fff/333?text=Hat' },
+            { letter: 'E', word: 'Elephant', image: 'https://placehold.co/250x250/fff/333?text=Elephant' }
         ];
-        let currentAlphabetIdx = 0;
-        const alphabetLetter = document.getElementById('alphabet-letter');
-        const alphabetWord = document.getElementById('alphabet-word');
-        const alphabetImage = document.getElementById('alphabet-image');
+        const alphabetTargetEl = document.getElementById('alphabet-target');
+        const alphabetOptionsEl = document.getElementById('alphabet-options');
+        const alphabetWordEl = document.getElementById('alphabet-word');
+        const alphabetImageEl = document.getElementById('alphabet-image');
+        const alphabetFeedbackEl = document.getElementById('alphabet-feedback');
+        let currentAlphabet;
 
-        function initializeAlphabet() {
-            updateAlphabetContent();
-            // The prompt is now triggered by a user action.
-            // speakText("Let's learn the alphabet!");
+        function nextAlphabetProblem() {
+            alphabetOptionsEl.innerHTML = '';
+            alphabetFeedbackEl.textContent = '';
+            const shuffledAlphabet = [...alphabet].sort(() => 0.5 - Math.random());
+            currentAlphabet = shuffledAlphabet[0];
+            const incorrectOptions = shuffledAlphabet.slice(1, 3);
+            const options = [currentAlphabet, ...incorrectOptions].sort(() => 0.5 - Math.random());
+
+            alphabetTargetEl.textContent = currentAlphabet.letter;
+            alphabetWordEl.textContent = currentAlphabet.word;
+            alphabetImageEl.src = currentAlphabet.image;
+
+            speakText(`Can you find the letter ${currentAlphabet.letter}?`);
+
+            options.forEach(item => {
+                const button = document.createElement('button');
+                button.textContent = item.letter.toLowerCase(); // Show lowercase option
+                button.onclick = () => checkAlphabetAnswer(item.letter);
+                alphabetOptionsEl.appendChild(button);
+            });
         }
 
-        function updateAlphabetContent() {
-            const item = alphabet[currentAlphabetIdx];
-            alphabetLetter.textContent = item.letter;
-            alphabetWord.textContent = item.word;
-            alphabetImage.src = item.image;
-            alphabetImage.alt = item.word;
-        }
-
-        function nextAlphabetLetter() {
-            currentAlphabetIdx = (currentAlphabetIdx + 1) % alphabet.length;
-            updateAlphabetContent();
-            speakAlphabet();
-        }
-
-        function speakAlphabet() {
-            const item = alphabet[currentAlphabetIdx];
-            speakText(`The letter is ${item.letter}, and the word is ${item.word}.`);
+        function checkAlphabetAnswer(selectedLetter) {
+            if (selectedLetter === currentAlphabet.letter) {
+                alphabetFeedbackEl.textContent = `Yes! That's the letter ${currentAlphabet.letter}! 🎉`;
+                speakText(`Yes! That's the letter ${currentAlphabet.letter}!`);
+            } else {
+                alphabetFeedbackEl.textContent = "Oops! That's not it. Try again! 🤔";
+                speakText("Oops! That's not it. Try again!");
+            }
         }
         
 
@@ -487,36 +551,26 @@
             { letter: 'B', sound: 'Buh', word: 'Ball', image: 'https://placehold.co/250x250/fff/333?text=Ball' },
             { letter: 'C', sound: 'Cuh', word: 'Cat', image: 'https://placehold.co/250x250/fff/333?text=Cat' },
             { letter: 'D', sound: 'Duh', word: 'Duck', image: 'https://placehold.co/250x250/fff/333?text=Duck' },
-            { letter: 'E', sound: 'Eh', word: 'Egg', image: 'https://placehold.co/250x250/fff/333?text=Egg' },
+            { letter: 'E', sound: 'Eh', word: 'Egg', image: 'https://placehold.co/250x250/fff/333?text=Egg' }
         ];
         let currentPhonicsIdx = 0;
-        const phonicsLetter = document.getElementById('phonics-letter');
-        const phonicsWord = document.getElementById('phonics-word');
-        const phonicsImage = document.getElementById('phonics-image');
+        const phonicsLetterEl = document.getElementById('phonics-letter');
+        const phonicsWordEl = document.getElementById('phonics-word');
+        const phonicsImageEl = document.getElementById('phonics-image');
 
-        function initializePhonics() {
-            updatePhonicsContent();
-            // The prompt is now triggered by a user action.
-            // speakText("Let's learn the sounds!");
-        }
-
-        function updatePhonicsContent() {
-            const item = phonics[currentPhonicsIdx];
-            phonicsLetter.textContent = item.letter;
-            phonicsWord.textContent = item.word;
-            phonicsImage.src = item.image;
-            phonicsImage.alt = item.word;
-        }
-
-        function nextPhonicsLetter() {
+        function nextPhonicsProblem() {
             currentPhonicsIdx = (currentPhonicsIdx + 1) % phonics.length;
-            updatePhonicsContent();
+            const item = phonics[currentPhonicsIdx];
+            phonicsLetterEl.textContent = item.letter;
+            phonicsWordEl.textContent = item.word;
+            phonicsImageEl.src = item.image;
             speakPhonics();
         }
 
         function speakPhonics() {
             const item = phonics[currentPhonicsIdx];
-            speakText(`The sound is ${item.sound}, as in ${item.word}.`);
+            // First say the letter name, then the sound and word
+            speakText(`The letter is ${item.letter}. The sound is ${item.sound}, as in ${item.word}.`);
         }
         
         // --- Simple Shape Matching ---
@@ -526,57 +580,49 @@
             { name: 'triangle', text: '🔺', shape: '10px', svg: '<svg width="100%" height="100%" viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="#ff69b4" /></svg>' }
         ];
         let currentShape;
-        const shapeTarget = document.getElementById('shape-target');
-        const shapeOptionsContainer = document.querySelector('.shape-option-container');
-        const shapeFeedback = document.getElementById('shape-feedback');
+        const shapeTargetEl = document.getElementById('shape-target');
+        const shapeOptionsEl = document.getElementById('shape-options');
+        const shapeFeedbackEl = document.getElementById('shape-feedback');
 
-        function initializeShapes() {
-            generateShapeProblem();
-            // The prompt is now triggered by a user action.
-            // speakText("Match the shape! Find the shape that looks the same.");
-        }
+        function nextShapeProblem() {
+            shapeOptionsEl.innerHTML = '';
+            shapeFeedbackEl.textContent = '';
+            
+            const shuffledShapes = [...shapes].sort(() => 0.5 - Math.random());
+            currentShape = shuffledShapes[0];
+            const incorrectShapes = shuffledShapes.slice(1, 3);
+            const options = [currentShape, ...incorrectShapes].sort(() => 0.5 - Math.random());
 
-        function generateShapeProblem() {
-            const availableShapes = [...shapes];
-            currentShape = availableShapes[Math.floor(Math.random() * availableShapes.length)];
-
-            shapeTarget.textContent = ''; // Clear text content
-            shapeTarget.style.borderRadius = currentShape.shape;
+            shapeTargetEl.textContent = '';
+            shapeTargetEl.style.borderRadius = currentShape.shape;
             
             if (currentShape.svg) {
-                shapeTarget.innerHTML = currentShape.svg;
-                shapeTarget.style.backgroundColor = 'transparent';
-                shapeTarget.style.border = 'none';
+                shapeTargetEl.innerHTML = currentShape.svg;
+                shapeTargetEl.style.backgroundColor = 'transparent';
+                shapeTargetEl.style.border = 'none';
             } else {
-                shapeTarget.style.backgroundColor = '#ff69b4';
-                shapeTarget.style.border = '4px solid #8a2be2';
+                shapeTargetEl.innerHTML = currentShape.text;
+                shapeTargetEl.style.backgroundColor = '#ff69b4';
+                shapeTargetEl.style.border = '4px solid #8a2be2';
             }
-
-            shapeOptionsContainer.innerHTML = '';
-            const options = [...shapes].sort(() => Math.random() - 0.5);
+            
+            speakText(`Can you find the ${currentShape.name}?`);
 
             options.forEach(shape => {
                 const button = document.createElement('button');
-                button.classList.add('shape-option');
                 button.textContent = shape.text;
                 button.dataset.name = shape.name;
-                button.onclick = () => checkShapeMatch(shape.name);
-                shapeOptionsContainer.appendChild(button);
+                button.onclick = () => checkShapeAnswer(shape.name);
+                shapeOptionsEl.appendChild(button);
             });
-            
-            shapeFeedback.textContent = '';
-            speakText(`Find the ${currentShape.name}.`);
         }
 
-        function checkShapeMatch(guess) {
+        function checkShapeAnswer(guess) {
             if (guess === currentShape.name) {
-                shapeFeedback.textContent = "Yay! You got it right! 🎉";
-                shapeFeedback.style.color = 'green';
+                shapeFeedbackEl.textContent = "Yay! You got it right! 🎉";
                 speakText("Yay! You got it right!");
-                setTimeout(generateShapeProblem, 2000);
             } else {
-                shapeFeedback.textContent = "Oops! Try again! 🤔";
-                shapeFeedback.style.color = 'red';
+                shapeFeedbackEl.textContent = "Oops! Try again! 🤔";
                 speakText("Oops! Try again!");
             }
         }
@@ -595,8 +641,6 @@
             ctx.fillStyle = 'white';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             selectColor('red'); // Set default color
-            // The prompt is now triggered by a user action.
-            // speakText("Let's draw! Pick a color and draw something fun.");
         }
 
         function draw(e) {
@@ -624,7 +668,7 @@
             currentColor = color;
             colorButtons.forEach(btn => btn.classList.remove('selected'));
             document.querySelector(`[data-color="${color}"]`).classList.add('selected');
-            speakText("Let's draw! Pick a color and draw something fun.");
+            speakText(`You picked the color ${color}.`);
         }
 
         function clearCanvas() {
