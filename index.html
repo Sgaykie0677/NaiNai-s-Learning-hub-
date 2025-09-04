@@ -237,7 +237,7 @@
         <hr>
 
         <!-- Hands-on Counting Game -->
-        <div class="card">
+        <div class="card" id="counting-card" style="display:none;">
             <h2>🔢 Let's Count!</h2>
             <p style="font-size: 3em; font-weight: bold; color: #ff8c00;">
                 <span id="count-output">0</span>
@@ -245,12 +245,13 @@
             <div id="counting-items"></div>
             <button onclick="addCountingItem()">Add One! ✨</button>
             <button onclick="resetCounting()">Start Over! 🔄</button>
+            <button onclick="showNextSection('counting-card')">Done Counting! ✅</button>
         </div>
 
         <hr>
 
         <!-- Color Recognition -->
-        <div class="card">
+        <div class="card" id="color-card" style="display:none;">
             <h2>🎨 Find a Color!</h2>
             <div id="color-question" class="feedback"></div>
             <div id="color-target-img-container" style="display: none;">
@@ -259,12 +260,13 @@
             <div id="color-options" class="choice-buttons"></div>
             <p id="color-feedback" class="feedback"></p>
             <button onclick="nextColorProblem()">Next Color ➡️</button>
+            <button onclick="showNextSection('color-card')">Done with Colors! ✅</button>
         </div>
 
         <hr>
 
         <!-- Animal Sounds -->
-        <div class="card">
+        <div class="card" id="animal-card" style="display:none;">
             <h2>🦁 Who Am I?</h2>
             <div class="animal-img-container">
                 <img id="animal-image-display" src="" alt="Animal">
@@ -272,12 +274,13 @@
             <div id="animal-options" class="choice-buttons"></div>
             <p id="animal-feedback" class="feedback"></p>
             <button onclick="nextAnimalProblem()">Next Animal ➡️</button>
+            <button onclick="showNextSection('animal-card')">Done with Animals! ✅</button>
         </div>
 
         <hr>
 
         <!-- Let's Learn the Alphabet -->
-        <div class="card">
+        <div class="card" id="alphabet-card" style="display:none;">
             <h2>🔤 Find the Letter!</h2>
             <div class="alphabet-content">
                 <div id="alphabet-target"></div>
@@ -289,12 +292,13 @@
             <div id="alphabet-options" class="choice-buttons"></div>
             <p id="alphabet-feedback" class="feedback"></p>
             <button onclick="nextAlphabetProblem()">Next Letter ➡️</button>
+            <button onclick="showNextSection('alphabet-card')">Done with Alphabet! ✅</button>
         </div>
 
         <hr>
 
         <!-- Phonics Section -->
-        <div class="card">
+        <div class="card" id="phonics-card" style="display:none;">
             <h2>🗣️ Let's Learn the Sounds!</h2>
             <div class="phonics-content">
                 <span class="letter-display" id="phonics-letter"></span>
@@ -303,23 +307,25 @@
             </div>
             <button onclick="nextPhonicsProblem()">Next Sound ➡️</button>
             <button onclick="speakPhonics()">Hear it again! 🔊</button>
+            <button onclick="showNextSection('phonics-card')">Done with Phonics! ✅</button>
         </div>
         
         <hr>
         
         <!-- Simple Shape Matching -->
-        <div class="card">
+        <div class="card" id="shape-card" style="display:none;">
             <h2>🔵 Match the Shape!</h2>
             <div id="shape-target"></div>
             <div id="shape-options" class="choice-buttons"></div>
             <p id="shape-feedback" class="feedback"></p>
             <button onclick="nextShapeProblem()">Next Shape ➡️</button>
+            <button onclick="showNextSection('shape-card')">Done with Shapes! ✅</button>
         </div>
 
         <hr>
 
         <!-- Simple Drawing Pad -->
-        <div class="card">
+        <div class="card" id="drawing-card" style="display:none;">
             <h2>🖍️ Let's Draw!</h2>
             <canvas id="drawing-canvas" width="400" height="300"></canvas>
             <div class="drawing-palette" style="margin-top: 15px;">
@@ -329,6 +335,7 @@
                 <button style="background-color: black;" onclick="selectColor('black')" data-color="black"></button>
             </div>
             <button onclick="clearCanvas()">Clear Drawing 🧼</button>
+            <button onclick="showNextSection('drawing-card')">All Done! 🎉</button>
         </div>
 
     </div>
@@ -345,24 +352,43 @@
             }
         }
 
+        // Define the order of sections
+        const sections = [
+            { id: 'counting-card', init: initializeCounting, speak: 'This is a counting game. Tap the add one button to count up to five!' },
+            { id: 'color-card', init: nextColorProblem, speak: 'Let\'s learn about colors! I will ask you to find a color and you tap the right one.' },
+            { id: 'animal-card', init: nextAnimalProblem, speak: 'It\'s time for animal sounds! Listen and guess which animal I am talking about.' },
+            { id: 'alphabet-card', init: nextAlphabetProblem, speak: 'Time to learn the alphabet! Find the letter that I show you.' },
+            { id: 'phonics-card', init: nextPhonicsProblem, speak: 'This is the phonics section! Tap the next sound button to hear a new letter and its sound.' },
+            { id: 'shape-card', init: nextShapeProblem, speak: 'Let\'s learn shapes! Can you match the shapes?' },
+            { id: 'drawing-card', init: initializeDrawing, speak: 'It is time to draw! Pick a color and draw on the canvas. You can clear the drawing when you are done.' }
+        ];
+        let currentSectionIndex = 0;
+
         // --- All Initializations moved to one function ---
         function startApp() {
             // Hide the start section
             document.getElementById('start-section').style.display = 'none';
-
-            // Now, run all the initial voice prompts
             speakText("Hello, and welcome to your new learning adventure!");
-            
-            // Wait for the welcome message to finish before initializing the sections
             setTimeout(() => {
-                initializeCounting();
-                initializeDrawing();
-                nextColorProblem();
-                nextAnimalProblem();
-                nextAlphabetProblem();
-                nextPhonicsProblem();
-                nextShapeProblem();
-            }, 1000); // Give it a second to speak the welcome message.
+                showNextSection(null);
+            }, 2000);
+        }
+
+        function showNextSection(currentCardId) {
+            if (currentCardId) {
+                document.getElementById(currentCardId).style.display = 'none';
+                currentSectionIndex++;
+            }
+            
+            if (currentSectionIndex < sections.length) {
+                const nextSection = sections[currentSectionIndex];
+                document.getElementById(nextSection.id).style.display = 'block';
+                speakText(nextSection.speak);
+                nextSection.init();
+            } else {
+                // All sections complete
+                speakText("You did an amazing job! We finished all the games!");
+            }
         }
 
         // --- Simple Counting Game (1-5) ---
@@ -382,7 +408,7 @@
                 item.classList.add('counting-item');
                 item.textContent = '⭐';
                 countingItemsContainer.appendChild(item);
-                speakText(count.toString());
+                // Removed the speakText call here to avoid repetition.
             } else {
                 countOutput.textContent = "Great job! You counted to 5! 🎉";
                 speakText("Great job! You counted to 5!");
@@ -427,11 +453,9 @@
                 colorQuestionEl.textContent = `Can you find the color that matches this picture?`;
                 colorTargetImgEl.src = currentCorrectColor.img;
                 colorTargetImgContainerEl.style.display = 'block';
-                speakText(`Can you find the color that matches the picture?`);
             } else {
                 colorQuestionEl.textContent = `Can you find the ${currentCorrectColor.name} button?`;
                 colorTargetImgContainerEl.style.display = 'none';
-                speakText(`Can you find the ${currentCorrectColor.name} button?`);
             }
 
             options.forEach(color => {
