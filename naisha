@@ -40,7 +40,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center; /* Changed to center */
             align-items: center;
             cursor: pointer;
             transition: transform 0.2s ease-in-out;
@@ -48,18 +48,11 @@
         .letter-card:hover {
             transform: scale(1.05);
         }
-        .card-letter {
-            font-size: 3em;
-            font-weight: bold;
-            color: #ad1457;
-            margin: 0;
-        }
         .card-image {
             max-width: 90%;
             height: auto;
             border-radius: 8px;
             object-fit: cover;
-            flex-grow: 1;
         }
         .card-word {
             font-size: 1.2em;
@@ -96,23 +89,12 @@
         const card = document.createElement('div');
         card.className = 'letter-card';
         card.onclick = () => playSound(item);
-
-        const letterDiv = document.createElement('div');
-        letterDiv.className = 'card-letter';
-        letterDiv.textContent = item.letter;
-
         const img = document.createElement('img');
         img.className = 'card-image';
         img.src = item.image;
         img.alt = item.word;
 
-        const wordDiv = document.createElement('div');
-        wordDiv.className = 'card-word';
-        wordDiv.textContent = item.word;
-
-        card.appendChild(letterDiv);
         card.appendChild(img);
-        card.appendChild(wordDiv);
         cardContainer.appendChild(card);
     });
 
