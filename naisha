@@ -123,10 +123,10 @@
 
         // --- Phonics & Objects ---
         const objects = [
-            { name: "Apple", image: "https://images.unsplash.com/photo-1563227807-f370aa0ac1b5?q=80&w=1000&auto=format&fit=crop" },
-            { name: "Ball", image: "https://images.unsplash.com/photo-1546700812-4293f9c6d32f?q=80&w=1000&auto=format&fit=crop" },
-            { name: "Cat", image: "https://images.unsplash.com/photo-1579737198759-4d6402432709?q=80&w=1000&auto=format&fit=crop" },
-            { name: "Dog", image: "https://images.unsplash.com/photo-1563227807-f370aa0ac1b5?q=80&w=1000&auto=format&fit=crop" }
+            { name: "Apple", image: "https://images.unsplash.com/photo-1576174640103-6059d4379e43?q=80&w=2000&auto=format&fit=crop" },
+            { name: "Ball", image: "https://images.unsplash.com/photo-1579952402283-a4e9b9c9f2b8?q=80&w=2000&auto=format&fit=crop" },
+            { name: "Cat", image: "https://images.unsplash.com/photo-1596854528075-c9a066580f48?q=80&w=2000&auto=format&fit=crop" },
+            { name: "Dog", image: "https://images.unsplash.com/photo-1589156229687-f20a719b6924?q=80&w=2000&auto=format&fit=crop" }
         ];
         
         const phonicSoundSpan = document.getElementById('phonic-sound');
@@ -149,7 +149,7 @@
         }
         
         function playPhonic(objectName) {
-            phonicSoundSpan.textContent = `The sound for ${objectName} is like in "${objectName}"`;
+            phonicSoundSpan.textContent = `The sound is for: ${objectName}`;
             // You can add a text-to-speech or audio file here later!
         }
         
