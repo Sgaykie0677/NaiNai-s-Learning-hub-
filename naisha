@@ -1,168 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Granddaughter's School</title>
-    <style>
-        body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background-color: #fce4ec; /* Light pink background */
-            color: #4a148c; /* Dark purple text */
-            text-align: center;
-            padding: 20px;
-        }
-        h1 {
-            color: #e91e63; /* Pink heading */
-            font-size: 3em;
-        }
-        h2 {
-            color: #ad1457; /* Darker pink sub-heading */
-            margin-top: 40px;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background-color: #fff8e1; /* Creamy background for content */
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .card {
-            background-color: #ffeb3b; /* Yellow card background */
-            margin: 20px 0;
-            padding: 15px;
-            border-radius: 10px;
-            display: inline-block;
-            width: 45%;
-            box-sizing: border-box;
-            vertical-align: top;
-            margin: 1%;
-        }
-        .card img {
-            max-width: 100%;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-        button {
-            background-color: #f06292; /* Light pink button */
-            color: white;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Granddaughter's School</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #fce4ec; /* Light pink background */
+            color: #4a148c; /* Dark purple text */
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #e91e63; /* Pink heading */
+            font-size: 3em;
+        }
+        h2 {
+            color: #ad1457; /* Darker pink sub-heading */
+            margin-top: 40px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #fff8e1; /* Creamy background for content */
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .card {
+            background-color: #ffeb3b; /* Yellow card background */
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            display: inline-block;
+            width: 45%;
+            box-sizing: border-box;
+            vertical-align: top;
+            margin: 1%;
+        }
+        .card img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #f06292; /* Light pink button */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #d81b60; /* Darker pink on hover */
+        }
+        .object-button {
+            background: none;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 1.2em;
-            cursor: pointer;
+            padding: 0;
             margin: 5px;
+            cursor: pointer;
         }
-        button:hover {
-            background-color: #d81b60; /* Darker pink on hover */
+        .object-button img {
+            width: 100px; /* Adjust size as needed */
+            height: 100px;
+            border: 2px solid #f06292;
+            border-radius: 10px;
         }
-    </style>
+    </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Welcome to Your School! 🏫</h1>
-        <p>A special place just for you to learn and have fun. ❤️</p>
+    <div class="container">
+        <h1>Welcome to Your School! 🏫</h1>
+        <p>A special place just for you to learn and have fun. ❤️</p>
 
-        <hr>
+        <hr>
 
-        <h2>🦁 Let's Learn About Animals!</h2>
-        <p id="animal-display">Click the buttons to see a new animal!</p>
-        <button onclick="changeAnimal()">Change Animal</button>
-        <img id="animal-image" src="https://via.placeholder.com/200" alt="Animal Image">
+        <h2>🦁 Let's Learn About Animals!</h2>
+        <p id="animal-display">Click the buttons to see a new animal!</p>
+        <button onclick="changeAnimal()">Change Animal</button>
+        <img id="animal-image" src="https://via.placeholder.com/200" alt="Animal Image">
 
-        <hr>
+        <hr>
 
-        <h2>🔡 Phonics & Letters</h2>
-        <p id="letter-display">Click a letter to hear its sound!</p>
-        <div>
-            <button onclick="playPhonic('a')">A</button>
-            <button onclick="playPhonic('b')">B</button>
-            <button onclick="playPhonic('c')">C</button>
-            <button onclick="playPhonic('d')">D</button>
-        </div>
-        <p>Phonic sound: <span id="phonic-sound"></span></p>
+        <h2>🔡 Phonics & Objects</h2>
+        <p id="object-display">Click an object to hear its beginning sound!</p>
+        <div id="object-buttons-container">
+            </div>
+        <p>The sound is for: <span id="phonic-sound"></span></p>
+        
+        <hr>
+
+        <h2>➕ Simple Math Game</h2>
+        <p>What is <span id="num1">?</span> + <span id="num2">?</span> = </p>
+        <input type="text" id="math-answer" placeholder="Your Answer">
+        <button onclick="checkMathAnswer()">Check Answer</button>
+        <p id="math-result"></p>
+
+    </div>
+
+    <script>
+        // --- Animal Recognition ---
+        const animals = [
+            { name: "Lion", image: "https://images.unsplash.com/photo-1546700812-4293f9c6d32f?q=80&w=1000&auto=format&fit=crop" },
+            { name: "Elephant", image: "https://images.unsplash.com/photo-1563227807-f370aa0ac1b5?q=80&w=1000&auto=format&fit=crop" },
+            { name: "Giraffe", image: "https://images.unsplash.com/photo-1579737198759-4d6402432709?q=80&w=1000&auto=format&fit=crop" }
+        ];
+        let currentAnimalIndex = 0;
+        const animalDisplay = document.getElementById('animal-display');
+        const animalImage = document.getElementById('animal-image');
+        
+        function changeAnimal() {
+            currentAnimalIndex = (currentAnimalIndex + 1) % animals.length;
+            const animal = animals[currentAnimalIndex];
+            animalDisplay.textContent = `It's a ${animal.name}!`;
+            animalImage.src = animal.image;
+        }
+
+        // --- Phonics & Objects ---
+        const objects = [
+            { name: "Apple", image: "https://images.unsplash.com/photo-1563227807-f370aa0ac1b5?q=80&w=1000&auto=format&fit=crop" },
+            { name: "Ball", image: "https://images.unsplash.com/photo-1546700812-4293f9c6d32f?q=80&w=1000&auto=format&fit=crop" },
+            { name: "Cat", image: "https://images.unsplash.com/photo-1579737198759-4d6402432709?q=80&w=1000&auto=format&fit=crop" },
+            { name: "Dog", image: "https://images.unsplash.com/photo-1563227807-f370aa0ac1b5?q=80&w=1000&auto=format&fit=crop" }
+        ];
         
-        <hr>
-
-        <h2>➕ Simple Math Game</h2>
-        <p>What is <span id="num1">?</span> + <span id="num2">?</span> = </p>
-        <input type="text" id="math-answer" placeholder="Your Answer">
-        <button onclick="checkMathAnswer()">Check Answer</button>
-        <p id="math-result"></p>
-
-    </div>
-
-    <script>
-        // --- Animal Recognition ---
-        const animals = [
-            { name: "Lion", image: "https://images.unsplash.com/photo-1546700812-4293f9c6d32f?q=80&w=1000&auto=format&fit=crop" },
-            { name: "Elephant", image: "https://images.unsplash.com/photo-1563227807-f370aa0ac1b5?q=80&w=1000&auto=format&fit=crop" },
-            { name: "Giraffe", image: "https://images.unsplash.com/photo-1579737198759-4d6402432709?q=80&w=1000&auto=format&fit=crop" }
-        ];
-        let currentAnimalIndex = 0;
-        const animalDisplay = document.getElementById('animal-display');
-        const animalImage = document.getElementById('animal-image');
-        
-        function changeAnimal() {
-            currentAnimalIndex = (currentAnimalIndex + 1) % animals.length;
-            const animal = animals[currentAnimalIndex];
-            animalDisplay.textContent = `It's a ${animal.name}!`;
-            animalImage.src = animal.image;
-        }
-
-        // --- Phonics ---
         const phonicSoundSpan = document.getElementById('phonic-sound');
+        const objectButtonsContainer = document.getElementById('object-buttons-container');
+        
+        // Function to create and add the image buttons
+        function createObjectButtons() {
+            objects.forEach(obj => {
+                const button = document.createElement('button');
+                button.className = 'object-button';
+                button.onclick = () => playPhonic(obj.name);
 
-        function playPhonic(letter) {
-            phonicSoundSpan.textContent = `The sound for ${letter.toUpperCase()} is like in "${getPhonicExample(letter)}"`;
+                const img = document.createElement('img');
+                img.src = obj.image;
+                img.alt = obj.name;
+
+                button.appendChild(img);
+                objectButtonsContainer.appendChild(button);
+            });
+        }
+        
+        function playPhonic(objectName) {
+            phonicSoundSpan.textContent = `The sound for ${objectName} is like in "${objectName}"`;
             // You can add a text-to-speech or audio file here later!
         }
         
-        function getPhonicExample(letter) {
-            const examples = {
-                'a': 'apple',
-                'b': 'ball',
-                'c': 'cat',
-                'd': 'dog'
-            };
-            return examples[letter] || '';
-        }
-
         // --- Simple Math Game ---
-        let correctAnswer;
-        const num1Span = document.getElementById('num1');
-        const num2Span = document.getElementById('num2');
-        const mathResultP = document.getElementById('math-result');
+        let correctAnswer;
+        const num1Span = document.getElementById('num1');
+        const num2Span = document.getElementById('num2');
+        const mathResultP = document.getElementById('math-result');
 
-        function generateNewProblem() {
-            const num1 = Math.floor(Math.random() * 5) + 1; // Numbers 1-5
-            const num2 = Math.floor(Math.random() * 5) + 1; // Numbers 1-5
-            num1Span.textContent = num1;
-            num2Span.textContent = num2;
-            correctAnswer = num1 + num2;
-        }
+        function generateNewProblem() {
+            const num1 = Math.floor(Math.random() * 5) + 1; // Numbers 1-5
+            const num2 = Math.floor(Math.random() * 5) + 1; // Numbers 1-5
+            num1Span.textContent = num1;
+            num2Span.textContent = num2;
+            correctAnswer = num1 + num2;
+        }
 
-        function checkMathAnswer() {
-            const userAnswer = parseInt(document.getElementById('math-answer').value, 10);
-            if (userAnswer === correctAnswer) {
-                mathResultP.textContent = "Great job, that's right! 👍";
-                mathResultP.style.color = "green";
-                setTimeout(() => {
-                    generateNewProblem();
-                    document.getElementById('math-answer').value = '';
-                    mathResultP.textContent = '';
-                }, 2000); // Wait 2 seconds before showing a new problem
-            } else {
-                mathResultP.textContent = "Oops, try again! 🤔";
-                mathResultP.style.color = "red";
-            }
-        }
-        
-        // Start the math game when the page loads
-        generateNewProblem();
+        function checkMathAnswer() {
+            const userAnswer = parseInt(document.getElementById('math-answer').value, 10);
+            if (userAnswer === correctAnswer) {
+                mathResultP.textContent = "Great job, that's right! 👍";
+                mathResultP.style.color = "green";
+                setTimeout(() => {
+                    generateNewProblem();
+                    document.getElementById('math-answer').value = '';
+                    mathResultP.textContent = '';
+                }, 2000); // Wait 2 seconds before showing a new problem
+            } else {
+                mathResultP.textContent = "Oops, try again! 🤔";
+                mathResultP.style.color = "red";
+            }
+        }
+        
+        // Start games when the page loads
+        createObjectButtons();
+        generateNewProblem();
 
-    </script>
+    </script>
 </body>
 </html>
