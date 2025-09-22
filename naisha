@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Granddaughter's School</title>
+    <title>Phonics Learning</title>
     <style>
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -11,14 +11,6 @@
             color: #4a148c; /* Dark purple text */
             text-align: center;
             padding: 20px;
-        }
-        h1 {
-            color: #e91e63; /* Pink heading */
-            font-size: 3em;
-        }
-        h2 {
-            color: #ad1457; /* Darker pink sub-heading */
-            margin-top: 40px;
         }
         .container {
             max-width: 800px;
@@ -28,165 +20,108 @@
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        .card {
+        h2 {
+            color: #ad1457;
+            margin-top: 40px;
+        }
+        .letter-card-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .letter-card {
+            width: 150px;
+            height: 180px;
             background-color: #ffeb3b; /* Yellow card background */
-            margin: 20px 0;
-            padding: 15px;
             border-radius: 10px;
-            display: inline-block;
-            width: 45%;
-            box-sizing: border-box;
-            vertical-align: top;
-            margin: 1%;
-        }
-        .card img {
-            max-width: 100%;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-        button {
-            background-color: #f06292; /* Light pink button */
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 1.2em;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
             cursor: pointer;
-            margin: 5px;
+            transition: transform 0.2s ease-in-out;
         }
-        button:hover {
-            background-color: #d81b60; /* Darker pink on hover */
+        .letter-card:hover {
+            transform: scale(1.05);
         }
-        .object-button {
-            background: none;
-            border: none;
-            padding: 0;
-            margin: 5px;
-            cursor: pointer;
-        }
-        .object-button img {
-            width: 100px; /* Adjust size as needed */
-            height: 100px;
-            border: 2px solid #f06292;
-            border-radius: 10px;
-        }
+        .card-letter {
+            font-size: 3em;
+            font-weight: bold;
+            color: #ad1457;
+            margin: 0;
+        }
+        .card-image {
+            max-width: 90%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-grow: 1;
+        }
+        .card-word {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #4a148c;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Welcome to Your School! 🏫</h1>
-        <p>A special place just for you to learn and have fun. ❤️</p>
+<div class="container">
+    <h1>Phonics Fun! 🎶</h1>
+    <p>Click on the pictures to hear the sound!</p>
 
-        <hr>
+    <div class="letter-card-container">
+            </div>
 
-        <h2>🦁 Let's Learn About Animals!</h2>
-        <p id="animal-display">Click the buttons to see a new animal!</p>
-        <button onclick="changeAnimal()">Change Animal</button>
-        <img id="animal-image" src="https://via.placeholder.com/200" alt="Animal Image">
+    <audio id="audio-player"></audio>
+</div>
 
-        <hr>
+<script>
+    const phonicsData = [
+        { letter: "A", word: "Apple", image: "https://images.unsplash.com/photo-1576174640103-6059d4379e43?q=80&w=2000&auto=format&fit=crop" },
+        { letter: "G", word: "Grapes", image: "https://images.unsplash.com/photo-1549729866-9e12f6a6236b?q=80&w=2000&auto=format&fit=crop" },
+        { letter: "J", word: "Jellyfish", image: "https://images.unsplash.com/photo-1570557438459-71578d6b677a?q=80&w=2000&auto=format&fit=crop" },
+        { letter: "U", word: "Umbrella", image: "https://images.unsplash.com/photo-1563227807-f370aa0ac1b5?q=80&w=1000&auto=format&fit=crop" },
+    ];
 
-        <h2>🔡 Phonics & Objects</h2>
-        <p id="object-display">Click an object to hear its beginning sound!</p>
-        <div id="object-buttons-container">
-            </div>
-        <p>The sound is for: <span id="phonic-sound"></span></p>
-        
-        <hr>
+    const cardContainer = document.querySelector('.letter-card-container');
+    const audioPlayer = document.getElementById('audio-player');
 
-        <h2>➕ Simple Math Game</h2>
-        <p>What is <span id="num1">?</span> + <span id="num2">?</span> = </p>
-        <input type="text" id="math-answer" placeholder="Your Answer">
-        <button onclick="checkMathAnswer()">Check Answer</button>
-        <p id="math-result"></p>
+    phonicsData.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'letter-card';
+        card.onclick = () => playSound(item);
 
-    </div>
+        const letterDiv = document.createElement('div');
+        letterDiv.className = 'card-letter';
+        letterDiv.textContent = item.letter;
 
-    <script>
-        // --- Animal Recognition ---
-        const animals = [
-            { name: "Lion", image: "https://images.unsplash.com/photo-1546700812-4293f9c6d32f?q=80&w=1000&auto=format&fit=crop" },
-            { name: "Elephant", image: "https://images.unsplash.com/photo-1563227807-f370aa0ac1b5?q=80&w=1000&auto=format&fit=crop" },
-            { name: "Giraffe", image: "https://images.unsplash.com/photo-1579737198759-4d6402432709?q=80&w=1000&auto=format&fit=crop" }
-        ];
-        let currentAnimalIndex = 0;
-        const animalDisplay = document.getElementById('animal-display');
-        const animalImage = document.getElementById('animal-image');
-        
-        function changeAnimal() {
-            currentAnimalIndex = (currentAnimalIndex + 1) % animals.length;
-            const animal = animals[currentAnimalIndex];
-            animalDisplay.textContent = `It's a ${animal.name}!`;
-            animalImage.src = animal.image;
-        }
+        const img = document.createElement('img');
+        img.className = 'card-image';
+        img.src = item.image;
+        img.alt = item.word;
 
-        // --- Phonics & Objects ---
-        const objects = [
-            { name: "Apple", image: "https://images.unsplash.com/photo-1576174640103-6059d4379e43?q=80&w=2000&auto=format&fit=crop" },
-            { name: "Ball", image: "https://images.unsplash.com/photo-1579952402283-a4e9b9c9f2b8?q=80&w=2000&auto=format&fit=crop" },
-            { name: "Cat", image: "https://images.unsplash.com/photo-1596854528075-c9a066580f48?q=80&w=2000&auto=format&fit=crop" },
-            { name: "Dog", image: "https://images.unsplash.com/photo-1589156229687-f20a719b6924?q=80&w=2000&auto=format&fit=crop" }
-        ];
-        
-        const phonicSoundSpan = document.getElementById('phonic-sound');
-        const objectButtonsContainer = document.getElementById('object-buttons-container');
-        
-        // Function to create and add the image buttons
-        function createObjectButtons() {
-            objects.forEach(obj => {
-                const button = document.createElement('button');
-                button.className = 'object-button';
-                button.onclick = () => playPhonic(obj.name);
+        const wordDiv = document.createElement('div');
+        wordDiv.className = 'card-word';
+        wordDiv.textContent = item.word;
 
-                const img = document.createElement('img');
-                img.src = obj.image;
-                img.alt = obj.name;
+        card.appendChild(letterDiv);
+        card.appendChild(img);
+        card.appendChild(wordDiv);
+        cardContainer.appendChild(card);
+    });
 
-                button.appendChild(img);
-                objectButtonsContainer.appendChild(button);
-            });
-        }
-        
-        function playPhonic(objectName) {
-            phonicSoundSpan.textContent = `The sound is for: ${objectName}`;
-            // You can add a text-to-speech or audio file here later!
-        }
-        
-        // --- Simple Math Game ---
-        let correctAnswer;
-        const num1Span = document.getElementById('num1');
-        const num2Span = document.getElementById('num2');
-        const mathResultP = document.getElementById('math-result');
+    function playSound(item) {
+        // Text-to-speech for the phonic sound
+        const utterance = new SpeechSynthesisUtterance(`The sound is for: ${item.word}. The letter is ${item.letter}.`);
+        window.speechSynthesis.speak(utterance);
+    }
+</script>
 
-        function generateNewProblem() {
-            const num1 = Math.floor(Math.random() * 5) + 1; // Numbers 1-5
-            const num2 = Math.floor(Math.random() * 5) + 1; // Numbers 1-5
-            num1Span.textContent = num1;
-            num2Span.textContent = num2;
-            correctAnswer = num1 + num2;
-        }
-
-        function checkMathAnswer() {
-            const userAnswer = parseInt(document.getElementById('math-answer').value, 10);
-            if (userAnswer === correctAnswer) {
-                mathResultP.textContent = "Great job, that's right! 👍";
-                mathResultP.style.color = "green";
-                setTimeout(() => {
-                    generateNewProblem();
-                    document.getElementById('math-answer').value = '';
-                    mathResultP.textContent = '';
-                }, 2000); // Wait 2 seconds before showing a new problem
-            } else {
-                mathResultP.textContent = "Oops, try again! 🤔";
-                mathResultP.style.color = "red";
-            }
-        }
-        
-        // Start games when the page loads
-        createObjectButtons();
-        generateNewProblem();
-
-    </script>
 </body>
 </html>
